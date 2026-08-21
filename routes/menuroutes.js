@@ -4,7 +4,7 @@ const router = express.Router();
 
 const authMiddleware = require("../middleware/authmiddleware");
 const adminMiddleware = require("../middleware/adminmiddleware");
-const uploadMenuImage = require("../middleware/menuUpload");
+
 
 const {
   createMenuItem,
@@ -32,7 +32,6 @@ router.post(
   "/",
   authMiddleware,
   adminMiddleware,
-  uploadMenuImage,
   createMenuItem
 );
 
@@ -43,7 +42,6 @@ router.put(
   "/:id",
   authMiddleware,
   adminMiddleware,
-  uploadMenuImage,
   updateMenuItem
 );
 

@@ -1,205 +1,359 @@
-const fs = require("fs");
-const path = require("path");
 const MenuItem = require("../models/MenuItem");
 
-const uploadsRoot = path.join(__dirname, "..", "uploads", "menu");
-
-function removeMenuImage(imageUrl) {
-  if (!imageUrl || typeof imageUrl !== "string") return;
-
-  const normalized = imageUrl.replace(/\\/g, "/");
-  if (!normalized.startsWith("/uploads/menu/")) return;
-
-  const filename = path.basename(normalized);
-  const filePath = path.join(uploadsRoot, filename);
-
-  try {
-    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
-  } catch (error) {
-    console.error("Could not remove old menu image:", error.message);
-  }
-}
-
-function imagePathFromRequest(req) {
-  return req.file ? `/uploads/menu/${req.file.filename}` : null;
-}
-
 // ==========================================
-// Create Menu Item
+// CREATE MENU ITEM
 // ==========================================
+
 const createMenuItem = async (req, res) => {
   try {
-    const { name, category, price, description, available } = req.body;
+    const {
+      name,
+      category,
+      price,
+      description,
+      available,
+      image,
+    } = req.body;
 
-    if (!name || !category || price === undefined || price === "") {
-      if (req.file) removeMenuImage(imagePathFromRequest(req));
+    // -----------------------------
+    // Validation
+    // -----------------------------
+
+    if (
+      !name ||
+      !category ||
+      price === undefined ||
+      price === ""
+    ) {
       return res.status(400).json({
         message: "Name, category and price are required",
       });
     }
 
     if (isNaN(price) || Number(price) < 0) {
-      if (req.file) removeMenuImage(imagePathFromRequest(req));
       return res.status(400).json({
         message: "Please enter a valid price",
       });
     }
 
+    // -----------------------------
+    // Create menu item
+    // -----------------------------
+
     const menuItem = await MenuItem.create({
       name: String(name).trim(),
+
       category: String(category).trim(),
+
       price: Number(price),
-      description: description ? String(description).trim() : null,
-      image: imagePathFromRequest(req),
-      available: available === undefined ? true : String(available) === "true",
+
+      description:
+        description !== undefined &&
+        description !== null &&
+        String(description).trim() !== ""
+          ? String(description).trim()
+          : null,
+
+      // UploadThing URL
+      image:
+        image !== undefined &&
+        image !== null &&
+        String(image).trim() !== ""
+          ? String(image).trim()
+          : null,
+
+      available:
+        available === undefined
+          ? true
+          : String(available) === "true",
     });
 
-    res.status(201).json({
+    return res.status(201).json({
       message: "Menu Item Created Successfully",
       menuItem,
     });
+
   } catch (error) {
-    if (req.file) removeMenuImage(imagePathFromRequest(req));
-    res.status(500).json({ message: error.message });
+
+    console.error(
+      "Create Menu Item Error:",
+      error
+    );
+
+    return res.status(500).json({
+      message: "Failed to create menu item",
+      error: error.message,
+    });
   }
 };
 
+
 // ==========================================
-// Get All Menu Items
+// GET ALL MENU ITEMS
 // ==========================================
+
 const getMenuItems = async (_req, res) => {
   try {
+
     const menuItems = await MenuItem.findAll({
       order: [["createdAt", "DESC"]],
     });
 
-    res.status(200).json(menuItems);
+    return res.status(200).json(menuItems);
+
   } catch (error) {
-    res.status(500).json({ message: error.message });
+
+    console.error(
+      "Get Menu Items Error:",
+      error
+    );
+
+    return res.status(500).json({
+      message: "Failed to load menu items",
+      error: error.message,
+    });
   }
 };
 
+
 // ==========================================
-// Get Single Menu Item
+// GET SINGLE MENU ITEM
 // ==========================================
+
 const getMenuItemById = async (req, res) => {
   try {
-    const menuItem = await MenuItem.findByPk(req.params.id);
+
+    const menuItem =
+      await MenuItem.findByPk(req.params.id);
 
     if (!menuItem) {
-      return res.status(404).json({ message: "Menu Item Not Found" });
+      return res.status(404).json({
+        message: "Menu Item Not Found",
+      });
     }
 
-    res.status(200).json(menuItem);
+    return res.status(200).json(menuItem);
+
   } catch (error) {
-    res.status(500).json({ message: error.message });
+
+    console.error(
+      "Get Single Menu Item Error:",
+      error
+    );
+
+    return res.status(500).json({
+      message: "Failed to load menu item",
+      error: error.message,
+    });
   }
 };
 
+
 // ==========================================
-// Update Menu Item
+// UPDATE MENU ITEM
 // ==========================================
+
 const updateMenuItem = async (req, res) => {
   try {
-    const menuItem = await MenuItem.findByPk(req.params.id);
+
+    const menuItem =
+      await MenuItem.findByPk(req.params.id);
 
     if (!menuItem) {
-      if (req.file) removeMenuImage(imagePathFromRequest(req));
-      return res.status(404).json({ message: "Menu Item Not Found" });
+      return res.status(404).json({
+        message: "Menu Item Not Found",
+      });
     }
 
-    const { name, category, price, description, available } = req.body;
+    const {
+      name,
+      category,
+      price,
+      description,
+      available,
+      image,
+    } = req.body;
 
-    if (!name || !category || price === undefined || price === "") {
-      if (req.file) removeMenuImage(imagePathFromRequest(req));
+    // -----------------------------
+    // Validation
+    // -----------------------------
+
+    if (
+      !name ||
+      !category ||
+      price === undefined ||
+      price === ""
+    ) {
       return res.status(400).json({
         message: "Name, category and price are required",
       });
     }
 
     if (isNaN(price) || Number(price) < 0) {
-      if (req.file) removeMenuImage(imagePathFromRequest(req));
-      return res.status(400).json({ message: "Please enter a valid price" });
+      return res.status(400).json({
+        message: "Please enter a valid price",
+      });
     }
 
-    const oldImage = menuItem.image;
-    const newImage = req.file ? imagePathFromRequest(req) : oldImage;
+    // -----------------------------
+    // Prepare update data
+    // -----------------------------
 
-    await menuItem.update({
+    const updateData = {
       name: String(name).trim(),
+
       category: String(category).trim(),
+
       price: Number(price),
-      description: description ? String(description).trim() : null,
-      image: newImage,
+
+      description:
+        description !== undefined &&
+        description !== null &&
+        String(description).trim() !== ""
+          ? String(description).trim()
+          : null,
+
       available:
         available === undefined
           ? menuItem.available
           : String(available) === "true",
-    });
+    };
 
-    if (req.file && oldImage && oldImage !== newImage) {
-      removeMenuImage(oldImage);
+    /*
+      Only replace image when frontend
+      sends a new image URL.
+
+      If no new image was selected,
+      existing image remains unchanged.
+    */
+
+    if (
+      image !== undefined &&
+      image !== null &&
+      String(image).trim() !== ""
+    ) {
+      updateData.image =
+        String(image).trim();
     }
 
-    res.status(200).json({
+    // -----------------------------
+    // Update database
+    // -----------------------------
+
+    await menuItem.update(updateData);
+
+    return res.status(200).json({
       message: "Menu Item Updated Successfully",
       menuItem,
     });
+
   } catch (error) {
-    if (req.file) removeMenuImage(imagePathFromRequest(req));
-    res.status(500).json({ message: error.message });
+
+    console.error(
+      "Update Menu Item Error:",
+      error
+    );
+
+    return res.status(500).json({
+      message: "Failed to update menu item",
+      error: error.message,
+    });
   }
 };
 
+
 // ==========================================
-// Delete Menu Item
+// DELETE MENU ITEM
 // ==========================================
+
 const deleteMenuItem = async (req, res) => {
   try {
-    const menuItem = await MenuItem.findByPk(req.params.id);
+
+    const menuItem =
+      await MenuItem.findByPk(req.params.id);
 
     if (!menuItem) {
-      return res.status(404).json({ message: "Menu Item Not Found" });
+      return res.status(404).json({
+        message: "Menu Item Not Found",
+      });
     }
 
-    const oldImage = menuItem.image;
+    // Delete only DB record.
+    // UploadThing file is not deleted here.
     await menuItem.destroy();
 
-    if (oldImage) removeMenuImage(oldImage);
+    return res.status(200).json({
+      message: "Menu Item Deleted Successfully",
+    });
 
-    res.status(200).json({ message: "Menu Item Deleted Successfully" });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+
+    console.error(
+      "Delete Menu Item Error:",
+      error
+    );
+
+    return res.status(500).json({
+      message: "Failed to delete menu item",
+      error: error.message,
+    });
   }
 };
 
+
 // ==========================================
-// Update Availability
+// UPDATE AVAILABILITY
 // ==========================================
+
 const updateAvailability = async (req, res) => {
   try {
-    const menuItem = await MenuItem.findByPk(req.params.id);
+
+    const menuItem =
+      await MenuItem.findByPk(req.params.id);
 
     if (!menuItem) {
-      return res.status(404).json({ message: "Menu Item Not Found" });
+      return res.status(404).json({
+        message: "Menu Item Not Found",
+      });
     }
 
     const { available } = req.body;
 
     if (typeof available !== "boolean") {
-      return res.status(400).json({ message: "Available must be true or false" });
+      return res.status(400).json({
+        message: "Available must be true or false",
+      });
     }
 
-    await menuItem.update({ available });
+    await menuItem.update({
+      available,
+    });
 
-    res.status(200).json({
-      message: "Menu Item Availability Updated",
+    return res.status(200).json({
+      message:
+        "Menu Item Availability Updated",
       menuItem,
     });
+
   } catch (error) {
-    res.status(500).json({ message: error.message });
+
+    console.error(
+      "Update Availability Error:",
+      error
+    );
+
+    return res.status(500).json({
+      message:
+        "Failed to update availability",
+      error: error.message,
+    });
   }
 };
+
+
+// ==========================================
+// EXPORTS
+// ==========================================
 
 module.exports = {
   createMenuItem,

@@ -146,56 +146,135 @@ function displayMenuItems(items) {
 async function saveMenuItem() {
   clearMessages();
 
-  const name = document.getElementById("name").value.trim();
-  const category = document.getElementById("category").value.trim();
-  const price = document.getElementById("price").value;
-  const description = document.getElementById("description").value.trim();
-  const available = document.getElementById("available").value === "true";
-  const file = imageInput.files[0];
+  const name =
+    document.getElementById("name").value.trim();
+
+  const category =
+    document.getElementById("category").value.trim();
+
+  const price =
+    document.getElementById("price").value;
+
+  const description =
+    document.getElementById("description").value.trim();
+
+  const available =
+    document.getElementById("available").value === "true";
+
+  const file =
+    imageInput.files[0];
+
+  // ------------------------------------------
+  // VALIDATION
+  // ------------------------------------------
 
   if (!name || !category || price === "") {
-    showMessage("Please fill in name, category and price.", "error");
+    showMessage(
+      "Please fill in name, category and price.",
+      "error"
+    );
     return;
   }
 
   if (Number(price) < 0) {
-    showMessage("Price cannot be negative.", "error");
+    showMessage(
+      "Price cannot be negative.",
+      "error"
+    );
     return;
   }
 
   if (file && file.size > 5 * 1024 * 1024) {
-    showMessage("Image is too large. Maximum size is 5MB.", "error");
+    showMessage(
+      "Image is too large. Maximum size is 5MB.",
+      "error"
+    );
     return;
   }
 
-  const formData = new FormData();
-  formData.append("name", name);
-  formData.append("category", category);
-  formData.append("price", Number(price));
-  formData.append("description", description);
-  formData.append("available", available);
-
-  if (file) {
-    formData.append("image", file);
-  }
-
   try {
+    // ------------------------------------------
+    // IMAGE
+    // ------------------------------------------
+
+    let imageUrl = currentImage || null;
+
+    /*
+      If a new image is selected,
+      upload it to UploadThing first.
+    */
+
+    if (file) {
+      showMessage(
+        "Uploading image...",
+        "success"
+      );
+
+      if (
+        typeof window.uploadMenuImage !==
+        "function"
+      ) {
+        throw new Error(
+          "Menu UploadThing uploader is not loaded."
+        );
+      }
+
+      imageUrl =
+        await window.uploadMenuImage(file);
+    }
+
+    // ------------------------------------------
+    // MENU DATA
+    // ------------------------------------------
+
+    const menuData = {
+      name,
+      category,
+      price: Number(price),
+      description,
+      available,
+      image: imageUrl
+    };
+
+    // ------------------------------------------
+    // SAVE TO BACKEND
+    // ------------------------------------------
+
     const response = await fetch(
-      editingId ? `${API_URL}/${editingId}` : API_URL,
+      editingId
+        ? `${API_URL}/${editingId}`
+        : API_URL,
       {
-        method: editingId ? "PUT" : "POST",
+        method: editingId
+          ? "PUT"
+          : "POST",
+
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization:
+            `Bearer ${token}`,
+
+          "Content-Type":
+            "application/json"
         },
-        body: formData,
+
+        body:
+          JSON.stringify(menuData)
       }
     );
 
-    const data = await response.json();
+    const data =
+      await response.json();
 
     if (!response.ok) {
-      throw new Error(data.message || "Something went wrong");
+      throw new Error(
+        data.message ||
+        "Something went wrong"
+      );
     }
+
+    // ------------------------------------------
+    // SUCCESS
+    // ------------------------------------------
 
     showMessage(
       editingId
@@ -205,10 +284,20 @@ async function saveMenuItem() {
     );
 
     resetForm();
-    loadMenuItems();
+
+    await loadMenuItems();
+
   } catch (error) {
-    console.error("Save Menu Error:", error);
-    showMessage(error.message, "error");
+
+    console.error(
+      "Save Menu Error:",
+      error
+    );
+
+    showMessage(
+      error.message,
+      "error"
+    );
   }
 }
 
