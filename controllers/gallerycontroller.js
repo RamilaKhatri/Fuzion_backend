@@ -33,6 +33,39 @@ const allowedStatuses = [
 
 
 /* =====================================================
+   HOME GALLERY LIMIT
+===================================================== */
+
+const HOME_GALLERY_LIMIT = 6;
+
+
+/* =====================================================
+   COUNT CURRENT HOME IMAGES
+===================================================== */
+
+async function getHomeGalleryCount(
+    excludeId = null
+) {
+
+    const where = {
+        showOnHome: true
+    };
+
+    if (excludeId !== null) {
+        where.id = {
+            [require("sequelize").Op.ne]:
+                excludeId
+        };
+    }
+
+    return Gallery.count({
+        where
+    });
+
+}
+
+
+/* =====================================================
    CREATE GALLERY
    POST /api/gallery
 ===================================================== */
@@ -84,6 +117,13 @@ const createGallery =
                         req.body.imageUrl
                     ).trim()
                     : "";
+
+
+            const showOnHome =
+                req.body.showOnHome === true ||
+                String(
+                    req.body.showOnHome
+                ).toLowerCase() === "true";
 
 
             /* ==========================================
@@ -147,6 +187,32 @@ const createGallery =
 
 
             /* ==========================================
+               HOME LIMIT
+            ========================================== */
+
+            if (showOnHome) {
+
+                const homeCount =
+                    await getHomeGalleryCount();
+
+                if (
+                    homeCount >=
+                    HOME_GALLERY_LIMIT
+                ) {
+
+                    return res.status(400).json({
+
+                        message:
+                            "Only 6 gallery images can be shown on the home page."
+
+                    });
+
+                }
+
+            }
+
+
+            /* ==========================================
                CREATE DATABASE RECORD
             ========================================== */
 
@@ -162,7 +228,9 @@ const createGallery =
                     description:
                         description || null,
 
-                    status
+                    status,
+
+                    showOnHome
 
                 });
 
@@ -219,6 +287,63 @@ const getGallery =
                         ]
 
                     ]
+
+                });
+
+
+            return res.status(200).json(
+                images
+            );
+
+        }
+
+        catch (error) {
+
+            next(error);
+
+        }
+
+    };
+
+
+/* =====================================================
+   GET HOME GALLERY
+   GET /api/gallery/home
+===================================================== */
+
+const getHomeGallery =
+    async (
+        req,
+        res,
+        next
+    ) => {
+
+        try {
+
+            const images =
+                await Gallery.findAll({
+
+                    where: {
+
+                        status:
+                            "Active",
+
+                        showOnHome:
+                            true
+
+                    },
+
+                    order: [
+
+                        [
+                            "id",
+                            "ASC"
+                        ]
+
+                    ],
+
+                    limit:
+                        HOME_GALLERY_LIMIT
 
                 });
 
@@ -447,6 +572,17 @@ const updateGallery =
                     : item.imageUrl;
 
 
+            const showOnHome =
+                req.body.showOnHome !== undefined
+                    ? (
+                        req.body.showOnHome === true ||
+                        String(
+                            req.body.showOnHome
+                        ).toLowerCase() === "true"
+                    )
+                    : item.showOnHome;
+
+
             /* ==========================================
                VALIDATION
             ========================================== */
@@ -508,6 +644,37 @@ const updateGallery =
 
 
             /* ==========================================
+               HOME LIMIT
+            ========================================== */
+
+            if (
+                showOnHome &&
+                !item.showOnHome
+            ) {
+
+                const homeCount =
+                    await getHomeGalleryCount(
+                        item.id
+                    );
+
+                if (
+                    homeCount >=
+                    HOME_GALLERY_LIMIT
+                ) {
+
+                    return res.status(400).json({
+
+                        message:
+                            "Only 6 gallery images can be shown on the home page."
+
+                    });
+
+                }
+
+            }
+
+
+            /* ==========================================
                UPDATE
             ========================================== */
 
@@ -522,7 +689,9 @@ const updateGallery =
                 description:
                     description || null,
 
-                status
+                status,
+
+                showOnHome
 
             });
 
@@ -617,6 +786,8 @@ module.exports = {
     createGallery,
 
     getGallery,
+
+    getHomeGallery,
 
     getAllGalleryForAdmin,
 

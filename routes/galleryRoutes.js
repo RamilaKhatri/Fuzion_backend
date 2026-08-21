@@ -31,6 +31,8 @@ const {
 
     getGallery,
 
+    getHomeGallery,
+
     getAllGalleryForAdmin,
 
     getGalleryById,
@@ -47,12 +49,22 @@ const {
 
 
 /* =====================================================
-   PUBLIC
+   PUBLIC - ALL ACTIVE GALLERY
 ===================================================== */
 
 router.get(
     "/",
     getGallery
+);
+
+
+/* =====================================================
+   PUBLIC - HOME GALLERY
+===================================================== */
+
+router.get(
+    "/home",
+    getHomeGallery
 );
 
 

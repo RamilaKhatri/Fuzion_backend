@@ -35,6 +35,16 @@ const Gallery = sequelize.define(
             type: DataTypes.STRING,
             allowNull: false,
             defaultValue: "Active"
+        },
+
+        // ==========================================
+        // SHOW ON HOME
+        // ==========================================
+
+        showOnHome: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: false
         }
     },
     {
