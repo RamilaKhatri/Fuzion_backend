@@ -1,0 +1,2154 @@
+/* =========================================================
+   FUZION CAFE ADMIN PANEL
+   MASTER CSS
+   ========================================================= */
+
+
+/* =========================================================
+   01. RESET + GLOBAL
+   ========================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f7f3ed;
+    color: #000000;
+    min-height: 100vh;
+    font-size: 18px;
+    line-height: 1.5;
+}
+
+button,
+input,
+select,
+textarea {
+    font-family: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+a {
+    color: inherit;
+}
+
+p {
+    color: #111111;
+    font-size: 18px;
+}
+
+
+/* =========================================================
+   02. MAIN LAYOUT
+   ========================================================= */
+
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+
+/* =========================================================
+   03. SIDEBAR - ALL ADMIN PAGES
+   ========================================================= */
+
+.sidebar {
+    position: fixed;
+
+    left: 0;
+    top: 0;
+    bottom: 0;
+
+    width: 250px;
+    height: 100vh;
+
+    background: #0b0f19;
+
+    color: #ffffff;
+
+    padding: 25px 16px;
+
+    display: flex;
+    flex-direction: column;
+
+    z-index: 1000;
+
+    box-shadow:
+        4px 0 20px rgba(0, 0, 0, 0.15);
+
+    overflow-y: auto;
+}
+
+
+/* =========================================================
+   04. SIDEBAR BRAND
+   ========================================================= */
+
+.brand,
+.brand1 {
+    text-align: center;
+
+    font-size: 25px;
+    font-weight: 800;
+
+    letter-spacing: 1.5px;
+
+    padding: 8px 5px 20px;
+
+    margin-bottom: 15px;
+
+    border-bottom:
+        1px solid rgba(255, 255, 255, 0.15);
+}
+
+.brand {
+    color: white;
+}
+
+.brand1 {
+    color: #ffffff;
+}
+
+.brand span {
+    display: block;
+    color: #ffffff;
+}
+
+.brand small {
+    display: block;
+
+    margin-top: 3px;
+
+    color: #d7c3ae;
+
+    font-size: 18px;
+
+    letter-spacing: 1px;
+}
+
+
+/* =========================================================
+   05. SIDEBAR NAVIGATION
+   ========================================================= */
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.sidebar nav a,
+.sidebar-nav a,
+.sidebar > a {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+
+    width: 100%;
+
+    padding: 13px 14px;
+
+    margin: 0;
+
+    border-radius: 9px;
+
+    text-decoration: none;
+
+    color: #f3eee9;
+
+    font-size: 18px;
+    font-weight: 600;
+
+    transition:
+        background 0.25s ease,
+        color 0.25s ease,
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+
+/* Sidebar Icons */
+
+.sidebar nav a i,
+.sidebar-nav a i,
+.sidebar > a i {
+    width: 22px;
+    min-width: 22px;
+
+    text-align: center;
+
+    font-size: 18px;
+
+    color: #ffffff;
+
+    transition: color 0.25s ease;
+}
+
+
+/* =========================================================
+   06. SIDEBAR HOVER
+   ========================================================= */
+
+.sidebar nav a:hover,
+.sidebar-nav a:hover,
+.sidebar > a:hover {
+    background: #d89a1f;
+
+    color: #ffffff;
+
+    transform: translateX(3px);
+}
+
+.sidebar nav a:hover i,
+.sidebar-nav a:hover i,
+.sidebar > a:hover i {
+    color: #ffffff;
+}
+
+
+/* =========================================================
+   07. ACTIVE SIDEBAR PAGE
+   ========================================================= */
+
+/* .sidebar nav a.active,
+.sidebar-nav a.active,
+.sidebar > a.active {
+    background: linear-gradient(
+        135deg,
+        #e6a72c,
+        #c98a1c
+    );
+
+    color: #ffffff;
+
+    box-shadow:
+        0 6px 18px rgba(230, 167, 44, 0.30);
+} */
+
+.sidebar nav a.active i,
+.sidebar-nav a.active i,
+.sidebar > a.active i {
+    color: #ffffff;
+}
+
+.sidebar nav a.active::after,
+.sidebar-nav a.active::after,
+.sidebar > a.active::after {
+    content: "";
+
+    position: absolute;
+
+    left: 12px;
+    right: 12px;
+    bottom: -3px;
+
+    height: 3px;
+
+    background: #ffd76a;
+
+    border-radius: 10px;
+}
+
+
+/* =========================================================
+   08. SIDEBAR LOGOUT
+   ========================================================= */
+
+.sidebar-bottom {
+    margin-top: auto;
+    padding-top: 20px;
+}
+
+.sidebar-bottom .logout,
+.sidebar .logout-btn {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 9px;
+
+    padding: 13px 15px;
+
+    border: none;
+    border-radius: 9px;
+
+    background: #ffffff;
+
+    color: #8b4513;
+
+    font-size: 18px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: all 0.25s ease;
+}
+
+.sidebar-bottom .logout:hover,
+.sidebar .logout-btn:hover {
+    background: #e6a72c;
+
+    color: #ffffff;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 7px 18px rgba(230, 167, 44, 0.30);
+}
+
+
+/* =========================================================
+   09. MAIN CONTENT - ALL PAGES
+   ========================================================= */
+
+.main {
+    margin-left: 250px;
+
+    width: calc(100% - 250px);
+
+    min-height: 100vh;
+
+    padding: 30px 35px;
+}
+
+
+/* =========================================================
+   10. TOPBAR - COMMON
+   ========================================================= */
+
+.topbar {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-bottom: 28px;
+}
+
+.topbar h1 {
+    margin: 0 0 6px;
+
+    color: #2d211b;
+
+    font-size: 32px;
+    font-weight: 700;
+}
+
+.topbar h2 {
+    color: #3d281c;
+
+    font-size: 24px;
+}
+
+
+/* =========================================================
+   11. NORMAL TEXT / PARAGRAPH
+   ========================================================= */
+
+.muted {
+    color: #111111 !important;
+
+    font-size: 18px;
+
+    line-height: 1.6;
+}
+
+.small-text {
+    color: #111111;
+
+    font-size: 18px;
+
+    margin-bottom: 6px;
+}
+
+
+/* =========================================================
+   12. COMMON PANELS
+   ========================================================= */
+
+.panel {
+    background: #ffffff;
+
+    border: 1px solid #eadfd5;
+
+    border-radius: 16px;
+
+    padding: 26px;
+
+    margin-bottom: 24px;
+
+    box-shadow:
+        0 6px 22px rgba(60, 35, 20, 0.07);
+}
+
+.panel h2 {
+    color: #4b3020;
+
+    font-size: 24px;
+
+    margin-bottom: 20px;
+}
+
+
+/* =========================================================
+   13. COMMON BUTTONS
+   ========================================================= */
+
+.btn {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    border: none;
+
+    padding: 12px 18px;
+
+    min-height: 46px;
+
+    border-radius: 9px;
+
+    font-size: 18px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: all 0.25s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+
+/* Primary Button */
+
+.btn.primary {
+    background: #e6a72c;
+
+    color: #ffffff;
+
+    box-shadow:
+        0 4px 12px rgba(230, 167, 44, 0.20);
+}
+
+.btn.primary:hover {
+    background: #c98a1c;
+
+    box-shadow:
+        0 7px 18px rgba(230, 167, 44, 0.30);
+}
+
+
+/* Secondary Button */
+
+.btn.secondary {
+    background: #f0e5d8;
+
+    color: #5d3c26;
+
+    border: 1px solid #dfcdbb;
+}
+
+.btn.secondary:hover {
+    background: #e6d3bd;
+
+    color: #3c281b;
+}
+
+
+/* Danger Button */
+
+.btn.danger {
+    background: #c94b3b;
+
+    color: #ffffff;
+}
+
+.btn.danger:hover {
+    background: #a93629;
+}
+
+
+/* Success Button */
+
+.btn.success {
+    background: #39804a;
+
+    color: #ffffff;
+}
+
+.btn.success:hover {
+    background: #2d693a;
+}
+
+
+/* =========================================================
+   14. TOP LOGOUT BUTTON
+   ========================================================= */
+
+.logout,
+.dashboard-logout {
+    border: 1px solid #eaded4;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    padding: 11px 17px;
+
+    min-height: 44px;
+
+    border-radius: 9px;
+
+    background: #ffffff;
+
+    color: #8b4513;
+
+    font-size: 18px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: all 0.25s ease;
+}
+
+.logout:hover,
+.dashboard-logout:hover {
+    background: #e6a72c;
+
+    color: #ffffff;
+
+    border-color: #e6a72c;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 6px 18px rgba(230, 167, 44, 0.25);
+}
+
+
+/* =========================================================
+   15. FORM
+   ========================================================= */
+
+.form-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 20px;
+}
+
+.field label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: #2d211b;
+
+    font-size: 18px;
+
+    font-weight: 700;
+}
+
+.field input,
+.field select,
+.field textarea {
+    width: 100%;
+
+    padding: 13px 15px;
+
+    border: 1px solid #dcd0c5;
+
+    border-radius: 9px;
+
+    background: #fffdfb;
+
+    color: #2d211b;
+
+    font-size: 18px;
+
+    outline: none;
+
+    transition:
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+    color: #777777;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+    border-color: #e6a72c;
+
+    box-shadow:
+        0 0 0 3px rgba(230, 167, 44, 0.15);
+}
+
+.field textarea {
+    min-height: 120px;
+
+    resize: vertical;
+}
+
+.full {
+    grid-column: 1 / -1;
+}
+
+
+/* =========================================================
+   16. ACTION BUTTON AREA
+   ========================================================= */
+
+.actions {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    flex-wrap: wrap;
+}
+
+
+/* =========================================================
+   17. TABLE
+   ========================================================= */
+
+.table-wrap {
+    width: 100%;
+
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    background: #ffffff;
+}
+
+.table th,
+.table td {
+    padding: 14px;
+
+    border-bottom:
+        1px solid #eee5df;
+
+    text-align: left;
+
+    vertical-align: middle;
+
+    font-size: 18px;
+}
+
+.table th {
+    background: #faf5ef;
+
+    color: #4b3020;
+
+    font-size: 18px;
+
+    font-weight: 700;
+}
+
+.table tbody tr {
+    transition:
+        background 0.2s ease;
+}
+
+.table tbody tr:hover {
+    background: #fffaf3;
+}
+
+
+/* =========================================================
+   18. STATUS
+   ========================================================= */
+
+.status {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 6px 11px;
+
+    border-radius: 999px;
+
+    background: #f3e8df;
+
+    color: #8b4513;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   19. MESSAGE
+   ========================================================= */
+
+.message {
+    display: none;
+
+    padding: 13px 16px;
+
+    margin-bottom: 18px;
+
+    border-radius: 9px;
+
+    font-size: 18px;
+
+    font-weight: 600;
+}
+
+.message.success {
+    display: block;
+
+    background: #e8f5e9;
+
+    color: #1b5e20;
+
+    border: 1px solid #c8e6c9;
+}
+
+.message.error {
+    display: block;
+
+    background: #ffebee;
+
+    color: #b71c1c;
+
+    border: 1px solid #ffcdd2;
+}
+
+
+/* =========================================================
+   20. EMPTY STATE
+   ========================================================= */
+
+.empty {
+    text-align: center;
+
+    color: #111111;
+
+    padding: 30px;
+
+    font-size: 18px;
+}
+
+
+/* =========================================================
+   21. IMAGE PREVIEW - FORM
+   ========================================================= */
+
+.image-preview {
+    margin-top: 10px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+.image-preview img {
+    width: 140px;
+
+    height: 100px;
+
+    object-fit: cover;
+
+    border-radius: 10px;
+
+    border: 2px solid #e4d5c5;
+}
+
+
+/* =========================================================
+   22. DASHBOARD PAGE
+   ========================================================= */
+
+.dashboard-page {
+    width: 100%;
+}
+
+
+/* Dashboard Topbar */
+
+.dashboard-topbar {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-bottom: 30px;
+}
+
+.dashboard-heading h1 {
+    margin: 0 0 7px;
+
+    font-size: 32px;
+
+    font-weight: 700;
+
+    color: #2d211b;
+}
+
+.dashboard-heading p {
+    margin: 0;
+
+    color: #111111;
+
+    font-size: 18px;
+}
+
+.dashboard-user-area {
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+}
+
+
+/* Admin Badge */
+
+.admin-badge {
+    width: 48px;
+
+    height: 48px;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background: linear-gradient(
+        135deg,
+        #e6a72c,
+        #b87516
+    );
+
+    color: #ffffff;
+
+    font-size: 20px;
+
+    box-shadow:
+        0 6px 18px rgba(230, 167, 44, 0.25);
+}
+
+.admin-info {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 2px;
+}
+
+.admin-info strong {
+    font-size: 16px;
+
+    color: #2d211b;
+}
+
+.admin-info span {
+    font-size: 14px;
+
+    color: #111111;
+}
+
+
+/* =========================================================
+   23. DASHBOARD STATISTICS
+   ========================================================= */
+
+.dashboard-stat-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 18px;
+
+    margin-bottom: 28px;
+}
+
+.dashboard-stat-card {
+    position: relative;
+
+    overflow: hidden;
+
+    background: #ffffff;
+
+    border: 1px solid #d8c7b8;
+
+    border-radius: 16px;
+
+    padding: 22px;
+
+    min-height: 145px;
+
+    box-shadow:
+        0 5px 20px rgba(60, 35, 20, 0.06);
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.dashboard-stat-card:hover {
+    transform: translateY(-5px);
+
+    box-shadow:
+        0 12px 30px rgba(60, 35, 20, 0.12);
+}
+
+.stat-top {
+    display: flex;
+
+    align-items: flex-start;
+
+    justify-content: space-between;
+
+    gap: 10px;
+}
+
+.stat-card-label {
+    display: block;
+
+    margin-top: 5px;
+
+    color: #111111;
+
+    font-size: 18px;
+
+    font-weight: 600;
+}
+
+.stat-number {
+    display: block;
+
+    margin-top: 5px;
+
+    color: #8b4513;
+
+    font-size: 30px;
+
+    line-height: 1.1;
+
+    font-weight: 700;
+}
+
+.stat-icon {
+    width: 48px;
+
+    height: 48px;
+
+    border-radius: 12px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background: #f0ddae;
+
+    color: #c48718;
+
+    font-size: 20px;
+}
+
+.stat-decoration {
+    position: absolute;
+
+    right: -24px;
+
+    bottom: -30px;
+
+    width: 90px;
+
+    height: 90px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(230, 167, 44, 0.10);
+}
+
+
+/* =========================================================
+   24. DASHBOARD QUICK MANAGEMENT
+   ========================================================= */
+
+.dashboard-panel {
+    background: #ffffff;
+
+    border: 1px solid #d8c7b8;
+
+    border-radius: 16px;
+
+    padding: 24px;
+
+    box-shadow:
+        0 5px 20px rgba(60, 35, 20, 0.06);
+}
+
+.panel-heading {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-bottom: 20px;
+}
+
+.panel-heading h2 {
+    margin: 0;
+
+    font-size: 22px;
+
+    font-weight: 700;
+
+    color: #2d211b;
+}
+
+.panel-heading span {
+    font-size: 25px;
+
+    color: #111111;
+}
+
+.quick-actions {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 14px;
+}
+
+.quick-action {
+    display: flex;
+
+    align-items: center;
+
+    gap: 13px;
+
+    padding: 16px;
+
+    border-radius: 12px;
+
+    text-decoration: none;
+
+    background: #faf7f4;
+
+    border: 1px solid #eee4dc;
+
+    color: #2d211b;
+
+    transition: all 0.25s ease;
+}
+
+.quick-action:hover {
+    background: #e6a72c;
+
+    color: #ffffff;
+
+    transform: translateY(-3px);
+
+    border-color: #e6a72c;
+
+    box-shadow:
+        0 8px 20px rgba(230, 167, 44, 0.22);
+}
+
+.quick-action-icon {
+    width: 44px;
+
+    height: 44px;
+
+    flex-shrink: 0;
+
+    border-radius: 10px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background: #fff2d2;
+
+    color: #c48718;
+
+    font-size: 18px;
+}
+
+.quick-action:hover .quick-action-icon {
+    background: #ffffff;
+
+    color: #c48718;
+}
+
+.quick-action-text {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+.quick-action-text strong {
+    font-size: 17px;
+}
+
+.quick-action-text span {
+    font-size: 16px;
+
+    color: #111111;
+}
+
+.quick-action:hover .quick-action-text span {
+    color: rgba(255, 255, 255, 0.90);
+}
+
+
+/* =========================================================
+   25. DASHBOARD RECENT DATA
+   ========================================================= */
+
+.recent-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 18px;
+
+    margin-top: 18px;
+}
+
+.recent-list {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+.recent-item {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding: 14px;
+
+    border-radius: 11px;
+
+    background: #faf8f6;
+
+    border: 1px solid #eee8e3;
+}
+
+.recent-item-main {
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 4px;
+}
+
+.recent-item-main strong {
+    color: #2d211b;
+
+    font-size: 16px;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+.recent-item-main span {
+    color: #111111;
+
+    font-size: 14px;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+.dashboard-footer-note {
+    margin-top: 22px;
+
+    text-align: center;
+
+    font-weight: 500;
+
+    color: #111111;
+
+    font-size: 20px;
+}
+
+
+/* =========================================================
+   26. MENU MANAGEMENT PAGE
+   3 COLUMN COMPACT DESIGN
+   ========================================================= */
+
+
+/* Menu Items Grid */
+
+#menuItems {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 20px;
+
+    margin-top: 20px;
+}
+
+
+/* =========================================================
+   MENU CARD
+   ========================================================= */
+
+.menu-card {
+    background: #ffffff;
+
+    border: 1px solid #eadfd4;
+
+    border-radius: 14px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 5px 18px rgba(60, 35, 20, 0.07);
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        border-color 0.25s ease;
+
+    min-width: 0;
+}
+
+.menu-card:hover {
+    transform: translateY(-5px);
+
+    border-color: #d6a54a;
+
+    box-shadow:
+        0 12px 28px rgba(139, 94, 32, 0.15);
+}
+
+
+/* =========================================================
+   MENU IMAGE TOP AREA
+   ========================================================= */
+
+.menu-card-top {
+    width: 100%;
+
+    height: 155px;
+
+    background: linear-gradient(
+        135deg,
+        #f0e0ca,
+        #e7d2b9
+    );
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+}
+
+
+/* Uploaded Image */
+
+.menu-card-image {
+    width: 100%;
+
+    height: 200px;
+
+    display: block;
+
+    object-fit: cover;
+
+    object-position: center;
+
+    transition: transform 0.35s ease;
+}
+
+.menu-card:hover .menu-card-image {
+    transform: scale(1.04);
+}
+
+
+/* Default Food Icon */
+
+.menu-card-top:not(.has-image) {
+    font-size: 42px;
+
+    color: #8b5e20;
+}
+
+
+/* =========================================================
+   MENU CARD CONTENT
+   ========================================================= */
+
+.menu-card-content {
+    padding: 17px 18px 18px;
+}
+
+
+/* =========================================================
+   MENU CATEGORY
+   ========================================================= */
+
+.menu-category {
+    display: inline-flex;
+
+    align-items: center;
+
+    background: #fff3d7;
+
+    color: #9a650d;
+
+    padding: 5px 9px;
+
+    border-radius: 20px;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    margin-bottom: 9px;
+}
+
+
+/* =========================================================
+   MENU TITLE
+   ========================================================= */
+
+.menu-card h3 {
+    margin: 0 0 7px;
+
+    color: #2f2118;
+
+    font-size: 20px;
+
+    font-weight: 700;
+
+    line-height: 1.3;
+}
+
+
+/* =========================================================
+   MENU DESCRIPTION
+   ========================================================= */
+
+.menu-card p {
+    margin: 0 0 12px;
+
+    color: #111111;
+
+    font-size: 16px;
+
+    line-height: 1.5;
+
+    display: -webkit-box;
+
+    -webkit-line-clamp: 2;
+
+    -webkit-box-orient: vertical;
+
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   MENU PRICE
+   ========================================================= */
+
+.menu-price {
+    margin-bottom: 8px;
+
+    color: #b57a12;
+
+    font-size: 18px;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   MENU AVAILABILITY
+   ========================================================= */
+
+.available {
+    display: block;
+
+    color: #26813b;
+
+    font-size: 16px;
+
+    font-weight: 600;
+
+    margin-bottom: 3px;
+}
+
+.unavailable {
+    display: block;
+
+    color: #c0392b;
+
+    font-size: 16px;
+
+    font-weight: 600;
+
+    margin-bottom: 3px;
+}
+
+
+/* =========================================================
+   MENU IMAGE NOTE
+   ========================================================= */
+
+.menu-image-note {
+    color: #333333;
+
+    font-size: 14px;
+
+    margin-top: 4px;
+}
+
+
+/* =========================================================
+   MENU ACTION BUTTONS
+   ========================================================= */
+
+.menu-actions {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 7px;
+
+    margin-top: 15px;
+}
+
+.menu-actions button {
+    border: none;
+
+    min-height: 38px;
+
+    padding: 8px 6px;
+
+    border-radius: 7px;
+
+    cursor: pointer;
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    transition: all 0.25s ease;
+}
+
+
+/* Edit */
+
+.edit-btn {
+    background: #f7dfa8;
+
+    color: #6e4b0a;
+}
+
+.edit-btn:hover {
+    background: #e9c873;
+
+    color: #4f3504;
+
+    transform: translateY(-2px);
+}
+
+
+/* Disable */
+
+.disable-btn {
+    background: #f4d5d2;
+
+    color: #a52f27;
+}
+
+.disable-btn:hover {
+    background: #eab7b2;
+
+    color: #8d241d;
+
+    transform: translateY(-2px);
+}
+
+
+/* Delete */
+
+.delete-btn {
+    background: #eeeeee;
+
+    color: #444444;
+}
+
+.delete-btn:hover {
+    background: #dcdcdc;
+
+    color: #222222;
+
+    transform: translateY(-2px);
+}
+
+
+/* =========================================================
+   MENU FORM
+   ========================================================= */
+
+.form-box,
+.menu-form {
+    background: #ffffff;
+
+    border: 1px solid #eadfd4;
+
+    border-radius: 16px;
+
+    padding: 24px;
+
+    margin-bottom: 24px;
+
+    box-shadow:
+        0 5px 20px rgba(60, 35, 20, 0.06);
+}
+
+
+/* =========================================================
+   27. ORDER PAGE
+   ========================================================= */
+
+.order-card {
+    background: #ffffff;
+
+    border: 1px solid #eadfd5;
+
+    border-radius: 14px;
+
+    padding: 20px;
+
+    margin-bottom: 15px;
+
+    box-shadow:
+        0 5px 18px rgba(60, 35, 20, 0.06);
+
+    transition: 0.25s ease;
+}
+
+.order-card:hover {
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 10px 25px rgba(60, 35, 20, 0.10);
+}
+
+.order-card h3 {
+    color: #4b3020;
+
+    font-size: 20px;
+
+    margin-bottom: 8px;
+}
+
+.order-card p {
+    color: #111111;
+
+    font-size: 18px;
+
+    margin-bottom: 6px;
+}
+
+
+/* =========================================================
+   28. BOOKING PAGE
+   ========================================================= */
+
+.booking-card {
+    background: #ffffff;
+
+    border: 1px solid #eadfd5;
+
+    border-radius: 14px;
+
+    padding: 20px;
+
+    margin-bottom: 15px;
+
+    box-shadow:
+        0 5px 18px rgba(60, 35, 20, 0.06);
+}
+
+.booking-card h3 {
+    color: #4b3020;
+
+    font-size: 20px;
+
+    margin-bottom: 8px;
+}
+
+.booking-card p {
+    color: #111111;
+
+    font-size: 18px;
+
+    margin-bottom: 5px;
+}
+
+
+/* =========================================================
+   29. ENQUIRY PAGE
+   ========================================================= */
+
+.enquiry-card {
+    background: #ffffff;
+
+    border: 1px solid #eadfd5;
+
+    border-radius: 14px;
+
+    padding: 20px;
+
+    margin-bottom: 15px;
+
+    box-shadow:
+        0 5px 18px rgba(60, 35, 20, 0.06);
+}
+
+.enquiry-card h3 {
+    color: #4b3020;
+
+    font-size: 20px;
+
+    margin-bottom: 8px;
+}
+
+.enquiry-card p {
+    color: #111111;
+
+    font-size: 18px;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   30. USER PAGE
+   ========================================================= */
+
+.user-card {
+    background: #ffffff;
+
+    border: 1px solid #eadfd5;
+
+    border-radius: 14px;
+
+    padding: 20px;
+
+    box-shadow:
+        0 5px 18px rgba(60, 35, 20, 0.06);
+
+    transition: 0.25s ease;
+}
+
+.user-card:hover {
+    transform: translateY(-3px);
+}
+
+.user-card h3 {
+    color: #4b3020;
+
+    font-size: 20px;
+
+    margin-bottom: 7px;
+}
+
+.user-card p {
+    color: #111111;
+
+    font-size: 18px;
+}
+
+
+/* =========================================================
+   31. GALLERY PAGE
+   ========================================================= */
+
+.gallery-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 20px;
+}
+
+.gallery-card {
+    background: #ffffff;
+
+    border: 1px solid #eadfd5;
+
+    border-radius: 14px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 5px 18px rgba(60, 35, 20, 0.07);
+
+    transition: 0.3s ease;
+}
+
+.gallery-card:hover {
+    transform: translateY(-5px);
+
+    box-shadow:
+        0 12px 28px rgba(60, 35, 20, 0.12);
+}
+
+.gallery-card img {
+    width: 100%;
+
+    height: 190px;
+
+    object-fit: cover;
+
+    display: block;
+}
+
+.gallery-card-content {
+    padding: 15px;
+}
+
+.gallery-card h3 {
+    font-size: 18px;
+
+    color: #4b3020;
+
+    margin-bottom: 6px;
+}
+
+.gallery-card p {
+    color: #111111;
+
+    font-size: 18px;
+}
+
+
+/* =========================================================
+   32. PROJECT PAGE
+   ========================================================= */
+
+.project-card {
+    background: #ffffff;
+
+    border: 1px solid #eadfd5;
+
+    border-radius: 14px;
+
+    padding: 22px;
+
+    box-shadow:
+        0 5px 18px rgba(60, 35, 20, 0.06);
+
+    transition: 0.3s ease;
+}
+
+.project-card:hover {
+    transform: translateY(-4px);
+
+    box-shadow:
+        0 12px 28px rgba(60, 35, 20, 0.11);
+}
+
+.project-card h3 {
+    font-size: 21px;
+
+    color: #4b3020;
+
+    margin-bottom: 8px;
+}
+
+.project-card p {
+    color: #111111;
+
+    font-size: 18px;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   33. PROFILE PAGE
+   ========================================================= */
+
+.profile-card {
+    background: #ffffff;
+
+    border: 1px solid #eadfd5;
+
+    border-radius: 16px;
+
+    padding: 28px;
+
+    box-shadow:
+        0 6px 22px rgba(60, 35, 20, 0.07);
+}
+
+.profile-card h2 {
+    color: #4b3020;
+
+    font-size: 24px;
+
+    margin-bottom: 18px;
+}
+
+.profile-card p {
+    color: #111111;
+
+    font-size: 18px;
+
+    margin-bottom: 8px;
+}
+
+
+/* =========================================================
+   34. FOOTER
+   ========================================================= */
+
+footer {
+    text-align: center;
+
+    padding: 30px 15px;
+
+    margin-top: 40px;
+
+    color: #111111;
+
+    font-size: 18px;
+}
+
+
+/* =========================================================
+   35. RESPONSIVE - LARGE TABLET
+   ========================================================= */
+
+@media (max-width: 1200px) {
+
+    .dashboard-stat-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .gallery-grid {
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+    }
+
+    #projects {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    /* Menu becomes 2 columns */
+
+    #menuItems {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+}
+
+
+/* =========================================================
+   36. RESPONSIVE - 900px
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .sidebar {
+        width: 215px;
+    }
+
+    .main {
+        margin-left: 215px;
+
+        width: calc(100% - 215px);
+
+        padding: 25px;
+    }
+
+    .quick-actions {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .recent-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .gallery-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    #menuItems {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+}
+
+
+/* =========================================================
+   37. RESPONSIVE - MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .layout {
+        display: block;
+    }
+
+    .sidebar {
+        position: relative;
+
+        width: 100%;
+
+        height: auto;
+
+        min-height: auto;
+
+        overflow: visible;
+    }
+
+    .main {
+        margin-left: 0;
+
+        width: 100%;
+
+        padding: 20px;
+    }
+
+    .sidebar-nav {
+        gap: 5px;
+    }
+
+    .sidebar-nav a {
+        font-size: 17px;
+    }
+
+    .sidebar-nav a.active::after {
+        display: none;
+    }
+
+    .topbar {
+        flex-direction: column;
+
+        align-items: flex-start;
+    }
+
+    .dashboard-topbar {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    .dashboard-user-area {
+        width: 100%;
+
+        justify-content: space-between;
+    }
+
+    .dashboard-stat-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .quick-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .full {
+        grid-column: auto;
+    }
+
+    #projects {
+        grid-template-columns: 1fr;
+    }
+
+    .gallery-grid {
+        grid-template-columns: 1fr;
+    }
+
+    #menuItems {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-panel {
+        padding: 18px;
+    }
+
+    .menu-card-top,
+    .menu-card-image {
+        height: 180px;
+    }
+}
+
+
+/* =========================================================
+   38. RESPONSIVE - SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    body {
+        font-size: 16px;
+    }
+
+    p {
+        font-size: 16px;
+    }
+
+    .main {
+        padding: 15px;
+    }
+
+    .topbar h1 {
+        font-size: 27px;
+    }
+
+    .dashboard-heading h1 {
+        font-size: 26px;
+    }
+
+    .admin-info {
+        display: none;
+    }
+
+    .dashboard-user-area {
+        gap: 8px;
+    }
+
+    .panel {
+        padding: 18px;
+    }
+
+    .btn {
+        font-size: 16px;
+
+        min-height: 44px;
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+        font-size: 16px;
+    }
+
+    .menu-actions {
+        grid-template-columns:
+            repeat(3, 1fr);
+    }
+
+    .menu-actions button {
+        font-size: 13px;
+
+        padding: 8px 4px;
+    }
+}
+
+
+/* =========================================================
+   39. VERY SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 360px) {
+
+    .menu-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .menu-actions button {
+        width: 100%;
+
+        font-size: 15px;
+    }
+
+    .dashboard-user-area {
+        flex-wrap: wrap;
+    }
+}

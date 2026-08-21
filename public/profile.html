@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Fuzion Café - Profile</title>
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+/>
+    <link rel="stylesheet" href="/admin.css" />
+  </head>
+  <body>
+    <div class="layout">
+
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            <span>FUZION</span>
+            <small>CAFÉ ADMIN</small>
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+            <a
+            
+                href="/dashboard.html"
+            >
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Dashboard</span>
+            </a>
+
+
+            <a href="/projects.html">
+                <i class="fa-solid fa-folder-open"></i>
+                <span>Projects</span>
+            </a>
+
+
+            <a href="/menu.html">
+                <i class="fa-solid fa-utensils"></i>
+                <span>Menu</span>
+            </a>
+
+
+            <a href="/users.html">
+                <i class="fa-solid fa-users"></i>
+                <span>Users</span>
+            </a>
+
+
+            <a href="/bookings.html">
+                <i class="fa-solid fa-calendar-check"></i>
+                <span>Bookings</span>
+            </a>
+
+
+            <a href="/enquiries.html">
+                <i class="fa-solid fa-envelope"></i>
+                <span>Enquiries</span>
+            </a>
+
+            <a href="/newsletter.html">
+    <i class="fa-solid fa-envelope-open-text"></i>
+    <span>Newsletter</span>
+</a>
+            <a href="/orders.html">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span>Orders</span>
+            </a>
+
+
+            <a href="/gallery.html">
+                <i class="fa-solid fa-images"></i>
+                <span>Gallery</span>
+            </a>
+
+
+            <a href="/team.html">
+    <i class="fa-solid fa-user-group"></i>
+    <span>Team</span>
+</a>
+
+            <a class="active" href="/profile.html">
+                <i class="fa-solid fa-user-gear"></i>
+                <span>Profile</span>
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <button
+                class="logout"
+                type="button"
+                onclick="logout()"
+            >
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </button>
+
+        </div>
+
+    </aside>
+      <main class="main">
+        <div class="topbar">
+          <div>
+            <h1>My Profile</h1>
+            <p class="muted">Update admin profile and password.</p>
+          </div>
+          <button class="logout" onclick="logout()">Logout</button>
+        </div>
+        <section class="panel">
+          <div id="message" class="message"></div>
+          <form id="profileForm" class="form-grid">
+            <div class="field">
+              <label>Name</label><input id="name" required />
+            </div>
+            <div class="field">
+              <label>Email</label><input id="email" type="email" required />
+            </div>
+            <div class="field">
+              <label>Current Password</label
+              ><input id="currentPassword" type="password" />
+            </div>
+            <div class="field">
+              <label>New Password</label
+              ><input id="newPassword" type="password" minlength="6" />
+            </div>
+            <div class="actions full">
+              <button class="btn primary">Save Profile</button>
+            </div>
+          </form>
+        </section>
+      </main>
+    </div>
+    <script src="/admin-common.js"></script>
+    <script>
+      async function load() {
+        try {
+          const u = await api("/api/profile");
+          name.value = u.name;
+          email.value = u.email;
+        } catch (e) {
+          setMessage(e.message, "error");
+        }
+      }
+      function setMessage(t, type) {
+        const m = document.getElementById("message");
+        m.style.display = "block";
+        m.textContent = t;
+        m.style.background = type === "error" ? "#f8d7da" : "#dff3e4";
+      }
+      profileForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        try {
+          const d = await api("/api/profile", {
+            method: "PUT",
+            body: JSON.stringify({
+              name: name.value,
+              email: email.value,
+              currentPassword: currentPassword.value,
+              newPassword: newPassword.value,
+            }),
+          });
+          setMessage(d.message);
+          profileForm.reset();
+          name.value = d.user.name;
+          email.value = d.user.email;
+        } catch (e) {
+          setMessage(e.message, "error");
+        }
+      });
+      load();
+    </script>
+  </body>
+</html>

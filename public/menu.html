@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Fuzion Café - Menu Management</title>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+/>
+  <link rel="stylesheet" href="/admin.css">
+</head>
+<body>
+  <div class="layout">
+
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            <span>FUZION</span>
+            <small>CAFÉ ADMIN</small>
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+            <a
+              
+                href="/dashboard.html"
+            >
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Dashboard</span>
+            </a>
+
+
+            <a href="/projects.html">
+                <i class="fa-solid fa-folder-open"></i>
+                <span>Projects</span>
+            </a>
+
+
+            <a class="active" href="/menu.html">
+                <i class="fa-solid fa-utensils"></i>
+                <span>Menu</span>
+            </a>
+
+
+            <a href="/users.html">
+                <i class="fa-solid fa-users"></i>
+                <span>Users</span>
+            </a>
+
+
+            <a href="/bookings.html">
+                <i class="fa-solid fa-calendar-check"></i>
+                <span>Bookings</span>
+            </a>
+
+
+            <a href="/enquiries.html">
+                <i class="fa-solid fa-envelope"></i>
+                <span>Enquiries</span>
+            </a>
+
+            <a href="/newsletter.html">
+    <i class="fa-solid fa-envelope-open-text"></i>
+    <span>Newsletter</span>
+</a>
+            <a href="/orders.html">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span>Orders</span>
+            </a>
+
+
+            <a href="/gallery.html">
+                <i class="fa-solid fa-images"></i>
+                <span>Gallery</span>
+            </a>
+
+
+            <a href="/team.html">
+    <i class="fa-solid fa-user-group"></i>
+    <span>Team</span>
+</a>
+
+            <a href="/profile.html">
+                <i class="fa-solid fa-user-gear"></i>
+                <span>Profile</span>
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <button
+                class="logout"
+                type="button"
+                onclick="logout()"
+            >
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </button>
+
+        </div>
+
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <div>
+          <h1>Menu Management</h1>
+          <p class="muted">Add, edit, enable/disable and delete menu items with images.</p>
+        </div>
+        <button class="logout" onclick="logout()">Logout</button>
+      </div>
+
+      <section class="panel">
+        <h2 id="formTitle">Add Menu Item</h2>
+        <div id="message" class="message"></div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="name">Name *</label>
+            <input id="name" type="text" placeholder="e.g. Thukpa">
+          </div>
+
+          <div class="field">
+            <label for="category">Category *</label>
+            <input id="category" type="text" placeholder="e.g. Snacks, Chicken, Coffee...">
+          </div>
+
+          <div class="field">
+            <label for="price">Price *</label>
+            <input id="price" type="number" min="0" step="1" placeholder="180">
+          </div>
+
+          <div class="field">
+            <label for="available">Available</label>
+            <select id="available">
+              <option value="true">Available</option>
+              <option value="false">Unavailable</option>
+            </select>
+          </div>
+
+          <div class="field full">
+            <label for="image">Menu Image</label>
+            <input id="image" type="file" accept="image/jpeg,image/png,image/webp">
+            <small class="muted">JPG, PNG or WEBP • maximum 5MB. When editing, leave empty to keep the current image.</small>
+            <div id="imagePreview" class="image-preview"></div>
+          </div>
+
+          <div class="field full">
+            <label for="description">Description</label>
+            <textarea id="description" placeholder="Short description of the menu item"></textarea>
+          </div>
+
+          <div class="actions full">
+            <button class="btn primary" onclick="saveMenuItem()">Save Menu Item</button>
+            <button class="btn secondary" id="cancelBtn" onclick="resetForm()" style="display:none">Cancel</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Menu Items</h2>
+        <div id="menuItems" class="recent-grid"></div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    function logout() {
+      localStorage.removeItem("token");
+      localStorage.removeItem("admin");
+      location.href = "/login.html";
+    }
+  </script>
+  <script src="/menu.js"></script>
+</body>
+</html>

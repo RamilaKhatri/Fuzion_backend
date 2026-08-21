@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Fuzion Café - Users</title>
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+/>
+    <link rel="stylesheet" href="/admin.css" />
+  </head>
+  <body>
+    <div class="layout">
+
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            <span>FUZION</span>
+            <small>CAFÉ ADMIN</small>
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+            <a
+                href="/dashboard.html"
+            >
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Dashboard</span>
+            </a>
+
+
+            <a href="/projects.html">
+                <i class="fa-solid fa-folder-open"></i>
+                <span>Projects</span>
+            </a>
+
+
+            <a href="/menu.html">
+                <i class="fa-solid fa-utensils"></i>
+                <span>Menu</span>
+            </a>
+
+
+            <a class="active" href="/users.html">
+                <i class="fa-solid fa-users"></i>
+                <span>Users</span>
+            </a>
+
+
+            <a href="/bookings.html">
+                <i class="fa-solid fa-calendar-check"></i>
+                <span>Bookings</span>
+            </a>
+
+
+            <a href="/enquiries.html">
+                <i class="fa-solid fa-envelope"></i>
+                <span>Enquiries</span>
+            </a>
+
+            <a href="/newsletter.html">
+    <i class="fa-solid fa-envelope-open-text"></i>
+    <span>Newsletter</span>
+</a>
+            <a href="/orders.html">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span>Orders</span>
+            </a>
+
+
+            <a href="/gallery.html">
+                <i class="fa-solid fa-images"></i>
+                <span>Gallery</span>
+            </a>
+
+
+            <a href="/team.html">
+    <i class="fa-solid fa-user-group"></i>
+    <span>Team</span>
+</a>
+
+            <a href="/profile.html">
+                <i class="fa-solid fa-user-gear"></i>
+                <span>Profile</span>
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <button
+                class="logout"
+                type="button"
+                onclick="logout()"
+            >
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </button>
+
+        </div>
+
+    </aside>
+      <main class="main">
+        <div class="topbar">
+          <div>
+            <h1>Users</h1>
+            <p class="muted">
+              View, edit, activate/deactivate and delete user accounts.
+            </p>
+          </div>
+          <button class="logout" onclick="logout()">Logout</button>
+        </div>
+        <section class="panel">
+          <h2 id="formTitle">Add User</h2>
+          <div id="message" class="message"></div>
+          <form id="manageForm" class="form-grid"></form>
+        </section>
+        <section class="panel">
+          <div class="topbar">
+            <h2>All Users</h2>
+            <button class="btn secondary" onclick="loadData()">Refresh</button>
+          </div>
+          <div class="table-wrap">
+            <table class="table">
+              <thead id="thead"></thead>
+              <tbody id="tbody">
+                <tr>
+                  <td class="empty">Loading...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+    <script>
+      window.MODULE = "users";
+    </script>
+    <script src="/admin-common.js"></script>
+    <script src="/management.js"></script>
+  </body>
+</html>

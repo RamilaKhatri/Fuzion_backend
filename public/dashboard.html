@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Fuzion Café | Admin Dashboard</title>
+
+    <!-- Font Awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+    <!-- Admin Common CSS -->
+    <link
+        rel="stylesheet"
+        href="/admin.css"
+    >
+</head>
+
+
+<body>
+
+<div class="layout">
+
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            <span>FUZION</span>
+            <small>CAFÉ ADMIN</small>
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+            <a
+                class="active"
+                href="/dashboard.html"
+            >
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Dashboard</span>
+            </a>
+
+
+            <a href="/projects.html">
+                <i class="fa-solid fa-folder-open"></i>
+                <span>Projects</span>
+            </a>
+
+
+            <a href="/menu.html">
+                <i class="fa-solid fa-utensils"></i>
+                <span>Menu</span>
+            </a>
+
+
+            <a href="/users.html">
+                <i class="fa-solid fa-users"></i>
+                <span>Users</span>
+            </a>
+
+
+            <a href="/bookings.html">
+                <i class="fa-solid fa-calendar-check"></i>
+                <span>Bookings</span>
+            </a>
+
+
+            <a href="/enquiries.html">
+                <i class="fa-solid fa-envelope"></i>
+                <span>Enquiries</span>
+            </a>
+
+            <a href="/newsletter.html">
+    <i class="fa-solid fa-envelope-open-text"></i>
+    <span>Newsletter</span>
+</a>
+            <a href="/orders.html">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span>Orders</span>
+            </a>
+
+
+            <a href="/gallery.html">
+                <i class="fa-solid fa-images"></i>
+                <span>Gallery</span>
+            </a>
+
+      
+            <a href="/team.html">
+    <i class="fa-solid fa-user-group"></i>
+    <span>Team</span>
+</a>
+
+
+            <a href="/profile.html">
+                <i class="fa-solid fa-user-gear"></i>
+                <span>Profile</span>
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <button
+                class="logout"
+                type="button"
+                onclick="logout()"
+            >
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
+
+    <main class="main dashboard-page">
+
+
+        <!-- TOPBAR -->
+
+        <header class="dashboard-topbar">
+
+            <div class="dashboard-heading">
+
+                <h1>
+                    Welcome back, Admin 👋
+                </h1>
+
+                <p>
+                    Keep track of your café operations, manage customer activities,
+    and stay updated with everything happening in one place.
+                </p>
+
+            </div>
+
+
+            <div class="dashboard-user-area">
+
+                <div class="admin-badge">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+
+
+                <div class="admin-info">
+
+                    <strong>
+                        Administrator
+                    </strong>
+
+                    <span>
+                        Fuzion Café
+                    </span>
+
+                </div>
+
+
+                <button
+                    class="dashboard-logout"
+                    type="button"
+                    onclick="logout()"
+                >
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    Logout
+                </button>
+
+            </div>
+
+        </header>
+
+
+        <!-- MESSAGE -->
+
+        <div
+            id="message"
+            class="message"
+        ></div>
+
+
+        <!-- =================================================
+             STATISTICS
+        ================================================== -->
+
+        <section class="dashboard-stat-grid">
+
+
+            <!-- USERS -->
+
+            <div class="dashboard-stat-card">
+
+                <div class="stat-top">
+
+                    <div>
+                        <span class="stat-card-label">
+                            Total Users
+                        </span>
+
+                        <strong
+                            id="totalUsers"
+                            class="stat-number"
+                        >
+                            0
+                        </strong>
+                    </div>
+
+
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+
+                </div>
+
+                <div class="stat-decoration"></div>
+
+            </div>
+
+
+            <!-- MENU -->
+
+            <div class="dashboard-stat-card">
+
+                <div class="stat-top">
+
+                    <div>
+                        <span class="stat-card-label">
+                            Menu Items
+                        </span>
+
+                        <strong
+                            id="totalMenu"
+                            class="stat-number"
+                        >
+                            0
+                        </strong>
+                    </div>
+
+
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-utensils"></i>
+                    </div>
+
+                </div>
+
+                <div class="stat-decoration"></div>
+
+            </div>
+
+
+            <!-- BOOKINGS -->
+
+            <div class="dashboard-stat-card">
+
+                <div class="stat-top">
+
+                    <div>
+                        <span class="stat-card-label">
+                            Total Bookings
+                        </span>
+
+                        <strong
+                            id="totalBookings"
+                            class="stat-number"
+                        >
+                            0
+                        </strong>
+                    </div>
+
+
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-calendar-check"></i>
+                    </div>
+
+                </div>
+
+                <div class="stat-decoration"></div>
+
+            </div>
+
+
+            <!-- ENQUIRIES -->
+
+            <div class="dashboard-stat-card">
+
+                <div class="stat-top">
+
+                    <div>
+                        <span class="stat-card-label">
+                            Total Enquiries
+                        </span>
+
+                        <strong
+                            id="totalEnquiries"
+                            class="stat-number"
+                        >
+                            0
+                        </strong>
+                    </div>
+
+
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-envelope"></i>
+                    </div>
+
+                </div>
+
+                <div class="stat-decoration"></div>
+
+            </div>
+
+
+            <!-- ORDERS -->
+
+            <div class="dashboard-stat-card">
+
+                <div class="stat-top">
+
+                    <div>
+                        <span class="stat-card-label">
+                            Total Orders
+                        </span>
+
+                        <strong
+                            id="totalOrders"
+                            class="stat-number"
+                        >
+                            0
+                        </strong>
+                    </div>
+
+
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                    </div>
+
+                </div>
+
+                <div class="stat-decoration"></div>
+
+            </div>
+
+
+            <!-- GALLERY -->
+
+            <div class="dashboard-stat-card">
+
+                <div class="stat-top">
+
+                    <div>
+                        <span class="stat-card-label">
+                            Gallery Items
+                        </span>
+
+                        <strong
+                            id="totalGallery"
+                            class="stat-number"
+                        >
+                            0
+                        </strong>
+                    </div>
+
+
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-images"></i>
+                    </div>
+
+                </div>
+
+                <div class="stat-decoration"></div>
+
+            </div>
+
+
+            <!-- PENDING BOOKINGS -->
+
+            <div class="dashboard-stat-card">
+
+                <div class="stat-top">
+
+                    <div>
+                        <span class="stat-card-label">
+                            Pending Bookings
+                        </span>
+
+                        <strong
+                            id="pendingBookings"
+                            class="stat-number"
+                        >
+                            0
+                        </strong>
+                    </div>
+
+
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-clock"></i>
+                    </div>
+
+                </div>
+
+                <div class="stat-decoration"></div>
+
+            </div>
+
+
+            <!-- PENDING ENQUIRIES -->
+
+            <div class="dashboard-stat-card">
+
+                <div class="stat-top">
+
+                    <div>
+                        <span class="stat-card-label">
+                            Pending Enquiries
+                        </span>
+
+                        <strong
+                            id="pendingEnquiries"
+                            class="stat-number"
+                        >
+                            0
+                        </strong>
+                    </div>
+
+
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-message"></i>
+                    </div>
+
+                </div>
+
+                <div class="stat-decoration"></div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             QUICK MANAGEMENT
+        ================================================== -->
+
+        <section class="dashboard-panel">
+
+            <div class="panel-heading">
+
+                <h2>
+                    Quick Management
+                </h2>
+
+                <span>
+                    Manage your café
+                </span>
+
+            </div>
+
+
+            <div class="quick-actions">
+
+
+                <a
+                    class="quick-action"
+                    href="/menu.html"
+                >
+
+                    <div class="quick-action-icon">
+                        <i class="fa-solid fa-utensils"></i>
+                    </div>
+
+                    <div class="quick-action-text">
+
+                        <strong>
+                            Manage Menu
+                        </strong>
+
+                        <span>
+                            Add or update food items
+                        </span>
+
+                    </div>
+
+                </a>
+
+
+                <a
+                    class="quick-action"
+                    href="/bookings.html"
+                >
+
+                    <div class="quick-action-icon">
+                        <i class="fa-solid fa-calendar-check"></i>
+                    </div>
+
+                    <div class="quick-action-text">
+
+                        <strong>
+                            Manage Bookings
+                        </strong>
+
+                        <span>
+                            Review customer bookings
+                        </span>
+
+                    </div>
+
+                </a>
+
+
+                <a
+                    class="quick-action"
+                    href="/enquiries.html"
+                >
+
+                    <div class="quick-action-icon">
+                        <i class="fa-solid fa-envelope"></i>
+                    </div>
+
+                    <div class="quick-action-text">
+
+                        <strong>
+                            Manage Enquiries
+                        </strong>
+
+                        <span>
+                            Check customer messages
+                        </span>
+
+                    </div>
+
+                </a>
+
+
+                <a
+                    class="quick-action"
+                    href="/orders.html"
+                >
+
+                    <div class="quick-action-icon">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                    </div>
+
+                    <div class="quick-action-text">
+
+                        <strong>
+                            Manage Orders
+                        </strong>
+
+                        <span>
+                            View and update orders
+                        </span>
+
+                    </div>
+
+                </a>
+
+
+                <a
+                    class="quick-action"
+                    href="/gallery.html"
+                >
+
+                    <div class="quick-action-icon">
+                        <i class="fa-solid fa-images"></i>
+                    </div>
+
+                    <div class="quick-action-text">
+
+                        <strong>
+                            Manage Gallery
+                        </strong>
+
+                        <span>
+                            Manage café photos
+                        </span>
+
+                    </div>
+
+                </a>
+
+
+                <a
+                    class="quick-action"
+                    href="/users.html"
+                >
+
+                    <div class="quick-action-icon">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+
+                    <div class="quick-action-text">
+
+                        <strong>
+                            Manage Users
+                        </strong>
+
+                        <span>
+                            Manage registered users
+                        </span>
+
+                    </div>
+
+                </a>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             RECENT BOOKINGS + ENQUIRIES
+        ================================================== -->
+
+        <div class="recent-grid">
+
+
+            <!-- RECENT BOOKINGS -->
+
+            <section class="dashboard-panel">
+
+                <div class="panel-heading">
+
+                    <h2>
+                        Recent Bookings
+                    </h2>
+
+                    <a
+                        href="/bookings.html"
+                        style="
+                            color:#8b4513;
+                            text-decoration:none;
+                            font-size:18px;
+                            font-weight:600;
+                        "
+                    >
+                        View all
+                    </a>
+
+                </div>
+
+
+                <div
+                    id="recentBookings"
+                    class="recent-list"
+                >
+                    <div class="empty">
+                        Loading bookings...
+                    </div>
+                </div>
+
+            </section>
+
+
+            <!-- RECENT ENQUIRIES -->
+
+            <section class="dashboard-panel">
+
+                <div class="panel-heading">
+
+                    <h2>
+                        Recent Enquiries
+                    </h2>
+
+                    <a
+                        href="/enquiries.html"
+                        style="
+                            color:#8b4513;
+                            text-decoration:none;
+                            font-size:18px;
+                            font-weight:600;
+                        "
+                    >
+                        View all
+                    </a>
+
+                </div>
+
+
+                <div
+                    id="recentEnquiries"
+                    class="recent-list"
+                >
+                    <div class="empty">
+                        Loading enquiries...
+                    </div>
+                </div>
+
+            </section>
+
+        </div>
+
+
+        <div class="dashboard-footer-note">
+            Fuzion Café Admin Panel · Dashboard
+        </div>
+
+
+    </main>
+
+</div>
+
+
+<!-- Common Admin JavaScript -->
+<script src="/admin-common.js"></script>
+
+<!-- Dashboard JavaScript -->
+<script src="/dashboard.js"></script>
+
+</body>
+
+</html>

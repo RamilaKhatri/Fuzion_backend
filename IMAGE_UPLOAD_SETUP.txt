@@ -1,0 +1,15 @@
+FUZION CAFE - MENU IMAGE UPLOAD
+
+This version adds image upload support to Admin Panel > Menu.
+
+IMPORTANT:
+1. Copy your existing .env file into this backend folder before running it.
+2. Keep database.sqlite from your current backend if you want to keep your existing menu/admin data.
+3. Run: npm install
+4. Run: npm run dev
+5. Open: http://localhost:5000/login.html
+6. Login as admin, open Menu, choose an image, then Save Menu Item.
+7. Customer frontend uses the uploaded backend image automatically.
+
+Images are stored in uploads/menu/ and served from /uploads/menu/...
+Accepted image types: JPG, JPEG, PNG, WEBP. Maximum 5MB.
