@@ -9,16 +9,16 @@
     box-sizing: border-box;
 }
 
+
 :root {
-    --brown: #5e321d;
-    --brown-dark: #351b10;
-    --gold: #c99535;
-    --gold-light: #e7b45a;
-    --cream: #f7f0e7;
-    --cream-light: #fffdf9;
-    --text: #30251f;
-    --muted: #8d8176;
-    --danger: #b42318;
+    --admin-dark: #0b0f19;
+    --admin-dark-2: #121827;
+    --admin-gold: #e6a72c;
+    --admin-gold-dark: #c98a1c;
+    --admin-light: #f7f3ed;
+    --admin-white: #ffffff;
+    --admin-text: #2d211b;
+    --admin-muted: #777777;
 }
 
 body {
@@ -57,7 +57,6 @@ body {
 /* =====================================================
    LEFT PANEL
 ===================================================== */
-
 .login-brand {
     position: relative;
     overflow: hidden;
@@ -70,20 +69,20 @@ body {
     flex-direction: column;
     justify-content: space-between;
 
-    color: #fff;
+    color: #ffffff;
 
     background:
         linear-gradient(
             145deg,
-            #573321 0%,
-            #3b2115 55%,
-            #24150e 100%
+            #0b0f19 0%,
+            #0d1320 55%,
+            #080b12 100%
         );
 
     border-radius: 26px 0 0 26px;
 
     box-shadow:
-        0 25px 60px rgba(63, 36, 21, 0.22);
+        0 25px 60px rgba(0, 0, 0, 0.20);
 }
 
 /* =====================================================
@@ -144,16 +143,16 @@ body {
     background:
         linear-gradient(
             135deg,
-            #e4ac4d,
-            #b77c22
+            #e6a72c,
+            #c98a1c
         );
 
-    color: #fff;
+    color: #ffffff;
 
     font-size: 23px;
 
     box-shadow:
-        0 10px 24px rgba(210, 157, 58, 0.25);
+        0 10px 24px rgba(230, 167, 44, 0.25);
 }
 
 .brand-top h2 {
@@ -184,7 +183,6 @@ body {
 
     max-width: 600px;
 }
-
 .brand-badge {
     display: inline-flex;
     align-items: center;
@@ -192,18 +190,23 @@ body {
 
     padding: 9px 14px;
 
-    border: 1px solid rgba(255, 255, 255, 0.16);
+    border: 1px solid rgba(255, 255, 255, 0.12);
 
     border-radius: 30px;
 
-    background: rgba(255, 255, 255, 0.07);
+    background: rgba(255, 255, 255, 0.05);
 
-    color: #eee1d6;
+    color: #e9edf4;
 
     font-size: 12px;
     font-weight: 700;
 
     letter-spacing: 1px;
+}
+
+.brand-badge i {
+    color: #e6a72c;
+    font-size: 8px;
 }
 
 .brand-badge i {
@@ -224,6 +227,13 @@ body {
     line-height: 0.98;
 
     letter-spacing: -2px;
+
+    color: #ffffff;
+}
+
+.brand-content h1 span {
+    color: #e6a72c;
+    font-style: italic;
 }
 
 .brand-content h1 span {
