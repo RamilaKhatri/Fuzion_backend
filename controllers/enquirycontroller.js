@@ -6,16 +6,34 @@ const Enquiry = require("../models/Enquiry");
    Admin only
 ===================================================== */
 
-const getEnquiries = async (req, res, next) => {
-    try {
-        const enquiries = await Enquiry.findAll({
-            order: [["createdAt", "DESC"]]
-        });
+const getEnquiries = async (
+    req,
+    res,
+    next
+) => {
 
-        res.status(200).json(enquiries);
+    try {
+
+        const enquiries =
+            await Enquiry.findAll({
+
+                order: [
+                    ["createdAt", "DESC"]
+                ]
+
+            });
+
+        return res.status(200).json(
+            enquiries
+        );
 
     } catch (error) {
-        console.error("GET ENQUIRIES ERROR:", error);
+
+        console.error(
+            "GET ENQUIRIES ERROR:",
+            error
+        );
+
         next(error);
     }
 };
@@ -26,20 +44,40 @@ const getEnquiries = async (req, res, next) => {
    Admin only
 ===================================================== */
 
-const getEnquiryById = async (req, res, next) => {
+const getEnquiryById = async (
+    req,
+    res,
+    next
+) => {
+
     try {
-        const enquiry = await Enquiry.findByPk(req.params.id);
+
+        const enquiry =
+            await Enquiry.findByPk(
+                req.params.id
+            );
+
 
         if (!enquiry) {
+
             return res.status(404).json({
-                message: "Enquiry not found"
+                message:
+                    "Enquiry not found"
             });
         }
 
-        res.status(200).json(enquiry);
+
+        return res.status(200).json(
+            enquiry
+        );
 
     } catch (error) {
-        console.error("GET ENQUIRY BY ID ERROR:", error);
+
+        console.error(
+            "GET ENQUIRY BY ID ERROR:",
+            error
+        );
+
         next(error);
     }
 };
@@ -50,11 +88,17 @@ const getEnquiryById = async (req, res, next) => {
    Public - Contact Form
 ===================================================== */
 
-const createEnquiry = async (req, res, next) => {
+const createEnquiry = async (
+    req,
+    res,
+    next
+) => {
+
     try {
 
         const {
             name,
+            phone,
             email,
             subject,
             message
@@ -65,9 +109,18 @@ const createEnquiry = async (req, res, next) => {
            REQUIRED FIELD VALIDATION
         ========================================== */
 
-        if (!name || !email || !message) {
+        if (
+            !name ||
+            !phone ||
+            !email ||
+            !message
+        ) {
+
             return res.status(400).json({
-                message: "Name, email and message are required"
+
+                message:
+                    "Name, phone, email and message are required"
+
             });
         }
 
@@ -76,21 +129,66 @@ const createEnquiry = async (req, res, next) => {
            CLEAN INPUT
         ========================================== */
 
-        const cleanName = String(name).trim();
-        const cleanEmail = String(email).trim().toLowerCase();
-        const cleanSubject = subject
-            ? String(subject).trim()
-            : null;
-        const cleanMessage = String(message).trim();
+        const cleanName =
+            String(name).trim();
+
+
+        const cleanPhone =
+            String(phone).trim();
+
+
+        const cleanEmail =
+            String(email)
+                .trim()
+                .toLowerCase();
+
+
+        const cleanSubject =
+            subject
+                ? String(subject).trim()
+                : null;
+
+
+        const cleanMessage =
+            String(message).trim();
 
 
         /* ==========================================
            NAME VALIDATION
         ========================================== */
 
-        if (cleanName.length < 3) {
+        if (
+            cleanName.length < 3
+        ) {
+
             return res.status(400).json({
-                message: "Name must be at least 3 characters"
+
+                message:
+                    "Name must be at least 3 characters"
+
+            });
+        }
+
+
+        /* ==========================================
+           PHONE VALIDATION
+        ========================================== */
+
+        const phoneRegex =
+            /^[\d\s\-+()]{10,}$/;
+
+
+        if (
+            !phoneRegex.test(
+                cleanPhone
+            )
+        ) {
+
+            return res.status(400).json({
+
+                message:
+                    "Please enter a valid phone number"
+
             });
         }
 
@@ -102,9 +200,18 @@ const createEnquiry = async (req, res, next) => {
         const emailRegex =
             /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-        if (!emailRegex.test(cleanEmail)) {
+
+        if (
+            !emailRegex.test(
+                cleanEmail
+            )
+        ) {
+
             return res.status(400).json({
-                message: "Please enter a valid email address"
+
+                message:
+                    "Please enter a valid email address"
+
             });
         }
 
@@ -117,8 +224,12 @@ const createEnquiry = async (req, res, next) => {
             cleanSubject &&
             cleanSubject.length < 5
         ) {
+
             return res.status(400).json({
-                message: "Subject must be at least 5 characters"
+
+                message:
+                    "Subject must be at least 5 characters"
+
             });
         }
 
@@ -127,9 +238,15 @@ const createEnquiry = async (req, res, next) => {
            MESSAGE VALIDATION
         ========================================== */
 
-        if (cleanMessage.length < 10) {
+        if (
+            cleanMessage.length < 10
+        ) {
+
             return res.status(400).json({
-                message: "Message must be at least 10 characters"
+
+                message:
+                    "Message must be at least 10 characters"
+
             });
         }
 
@@ -138,38 +255,58 @@ const createEnquiry = async (req, res, next) => {
            MESSAGE MAXIMUM LENGTH
         ========================================== */
 
-        if (cleanMessage.length > 500) {
+        if (
+            cleanMessage.length > 500
+        ) {
+
             return res.status(400).json({
-                message: "Message cannot exceed 500 characters"
+
+                message:
+                    "Message cannot exceed 500 characters"
+
             });
         }
 
 
         /* ==========================================
            CREATE ENQUIRY
-           
-           IMPORTANT:
-           Status is NOT taken from customer.
-           It automatically becomes Pending.
         ========================================== */
 
-        const enquiry = await Enquiry.create({
-            name: cleanName,
-            email: cleanEmail,
-            subject: cleanSubject,
-            message: cleanMessage,
-            status: "Pending"
-        });
+        const enquiry =
+            await Enquiry.create({
+
+                name:
+                    cleanName,
+
+                phone:
+                    cleanPhone,
+
+                email:
+                    cleanEmail,
+
+                subject:
+                    cleanSubject,
+
+                message:
+                    cleanMessage,
+
+                status:
+                    "Pending"
+
+            });
 
 
         /* ==========================================
-           SUCCESS RESPONSE
+           SUCCESS
         ========================================== */
 
-        res.status(201).json({
+        return res.status(201).json({
+
             message:
                 "Enquiry submitted successfully",
+
             enquiry
+
         });
 
     } catch (error) {
@@ -189,74 +326,39 @@ const createEnquiry = async (req, res, next) => {
    Admin only
 ===================================================== */
 
-const updateEnquiry = async (req, res, next) => {
+const updateEnquiry = async (
+    req,
+    res,
+    next
+) => {
+
     try {
 
         const enquiry =
-            await Enquiry.findByPk(req.params.id);
+            await Enquiry.findByPk(
+                req.params.id
+            );
 
-
-        /* ==========================================
-           CHECK EXISTENCE
-        ========================================== */
 
         if (!enquiry) {
+
             return res.status(404).json({
-                message: "Enquiry not found"
+
+                message:
+                    "Enquiry not found"
+
             });
         }
 
 
         const {
             name,
+            phone,
             email,
             subject,
             message,
             status
         } = req.body;
-
-
-        /* ==========================================
-           VALIDATE EMAIL
-        ========================================== */
-
-        if (email !== undefined) {
-
-            const cleanEmail =
-                String(email).trim().toLowerCase();
-
-            const emailRegex =
-                /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-            if (!emailRegex.test(cleanEmail)) {
-                return res.status(400).json({
-                    message:
-                        "Please enter a valid email address"
-                });
-            }
-        }
-
-
-        /* ==========================================
-           VALIDATE STATUS
-        ========================================== */
-
-        if (status !== undefined) {
-
-            const validStatuses = [
-                "Pending",
-                "Read",
-                "Resolved",
-                "Rejected"
-            ];
-
-            if (!validStatuses.includes(status)) {
-                return res.status(400).json({
-                    message:
-                        "Invalid enquiry status"
-                });
-            }
-        }
 
 
         /* ==========================================
@@ -266,32 +368,117 @@ const updateEnquiry = async (req, res, next) => {
         const updateData = {};
 
 
-        if (name !== undefined) {
+        /* ==========================================
+           NAME
+        ========================================== */
+
+        if (
+            name !== undefined
+        ) {
 
             const cleanName =
                 String(name).trim();
 
-            if (cleanName.length < 3) {
+
+            if (
+                cleanName.length < 3
+            ) {
+
                 return res.status(400).json({
+
                     message:
                         "Name must be at least 3 characters"
+
                 });
             }
 
-            updateData.name = cleanName;
+
+            updateData.name =
+                cleanName;
         }
 
 
-        if (email !== undefined) {
+        /* ==========================================
+           PHONE
+        ========================================== */
 
-            updateData.email =
+        if (
+            phone !== undefined
+        ) {
+
+            const cleanPhone =
+                String(phone).trim();
+
+
+            const phoneRegex =
+                /^[\d\s\-+()]{10,}$/;
+
+
+            if (
+                !phoneRegex.test(
+                    cleanPhone
+                )
+            ) {
+
+                return res.status(400).json({
+
+                    message:
+                        "Please enter a valid phone number"
+
+                });
+            }
+
+
+            updateData.phone =
+                cleanPhone;
+        }
+
+
+        /* ==========================================
+           EMAIL
+        ========================================== */
+
+        if (
+            email !== undefined
+        ) {
+
+            const cleanEmail =
                 String(email)
                     .trim()
                     .toLowerCase();
+
+
+            const emailRegex =
+                /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+
+            if (
+                !emailRegex.test(
+                    cleanEmail
+                )
+            ) {
+
+                return res.status(400).json({
+
+                    message:
+                        "Please enter a valid email address"
+
+                });
+            }
+
+
+            updateData.email =
+                cleanEmail;
         }
 
 
-        if (subject !== undefined) {
+        /* ==========================================
+           SUBJECT
+        ========================================== */
+
+        if (
+            subject !== undefined
+        ) {
 
             updateData.subject =
                 subject
@@ -300,50 +487,103 @@ const updateEnquiry = async (req, res, next) => {
         }
 
 
-        if (message !== undefined) {
+        /* ==========================================
+           MESSAGE
+        ========================================== */
+
+        if (
+            message !== undefined
+        ) {
 
             const cleanMessage =
                 String(message).trim();
 
-            if (cleanMessage.length < 10) {
+
+            if (
+                cleanMessage.length < 10
+            ) {
+
                 return res.status(400).json({
+
                     message:
                         "Message must be at least 10 characters"
+
                 });
             }
 
-            if (cleanMessage.length > 500) {
+
+            if (
+                cleanMessage.length > 500
+            ) {
+
                 return res.status(400).json({
+
                     message:
                         "Message cannot exceed 500 characters"
+
                 });
             }
+
 
             updateData.message =
                 cleanMessage;
         }
 
 
-        if (status !== undefined) {
-            updateData.status = status;
+        /* ==========================================
+           STATUS
+        ========================================== */
+
+        if (
+            status !== undefined
+        ) {
+
+            const validStatuses = [
+
+                "Pending",
+                "Read",
+                "Resolved",
+                "Rejected"
+
+            ];
+
+
+            if (
+                !validStatuses.includes(
+                    status
+                )
+            ) {
+
+                return res.status(400).json({
+
+                    message:
+                        "Invalid enquiry status"
+
+                });
+            }
+
+
+            updateData.status =
+                status;
         }
 
 
         /* ==========================================
-           SAVE UPDATE
+           SAVE
         ========================================== */
 
-        await enquiry.update(updateData);
+        await enquiry.update(
+            updateData
+        );
 
 
-        /* ==========================================
-           SUCCESS RESPONSE
-        ========================================== */
+        return res.status(200).json({
 
-        res.status(200).json({
             message:
                 "Enquiry updated successfully",
+
             enquiry
+
         });
 
     } catch (error) {
@@ -363,38 +603,39 @@ const updateEnquiry = async (req, res, next) => {
    Admin only
 ===================================================== */
 
-const deleteEnquiry = async (req, res, next) => {
+const deleteEnquiry = async (
+    req,
+    res,
+    next
+) => {
+
     try {
 
         const enquiry =
-            await Enquiry.findByPk(req.params.id);
+            await Enquiry.findByPk(
+                req.params.id
+            );
 
-
-        /* ==========================================
-           CHECK EXISTENCE
-        ========================================== */
 
         if (!enquiry) {
+
             return res.status(404).json({
-                message: "Enquiry not found"
+
+                message:
+                    "Enquiry not found"
+
             });
         }
 
 
-        /* ==========================================
-           DELETE
-        ========================================== */
-
         await enquiry.destroy();
 
 
-        /* ==========================================
-           SUCCESS RESPONSE
-        ========================================== */
+        return res.status(200).json({
 
-        res.status(200).json({
             message:
                 "Enquiry deleted successfully"
+
         });
 
     } catch (error) {
@@ -414,9 +655,15 @@ const deleteEnquiry = async (req, res, next) => {
 ===================================================== */
 
 module.exports = {
+
     getEnquiries,
+
     getEnquiryById,
+
     createEnquiry,
+
     updateEnquiry,
+
     deleteEnquiry
+
 };

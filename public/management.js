@@ -173,56 +173,87 @@ const configs = {
 
     /* ================= ENQUIRIES ================= */
 
-    enquiries: {
-        endpoint: "/api/enquiries",
+enquiries: {
+    endpoint: "/api/enquiries",
 
-        columns: [
-            "ID",
-            "Name",
-            "Email",
-            "Subject",
-            "Message",
+    columns: [
+        "ID",
+        "Name",
+        "Phone",
+        "Email",
+        "Subject",
+        "Message",
+        "Status",
+        "Actions"
+    ],
+
+    fields: [
+        ["name", "Name", "text", true],
+
+        ["phone", "Phone", "tel", true],
+
+        ["email", "Email", "email", true],
+
+        ["subject", "Subject", "text", false],
+
+        ["message", "Message", "textarea", true],
+
+        [
+            "status",
             "Status",
-            "Actions"
-        ],
-
-        fields: [
-            ["name", "Name", "text", true],
-            ["email", "Email", "email", true],
-            ["subject", "Subject", "text", false],
-            ["message", "Message", "textarea", true],
-
+            "select",
+            true,
             [
-                "status",
-                "Status",
-                "select",
-                true,
-                [
-                    "Pending",
-                    "Read",
-                    "Resolved",
-                    "Rejected"
-                ]
+                "Pending",
+                "Read",
+                "Resolved",
+                "Rejected"
             ]
-        ],
+        ]
+    ],
 
-        row: r => [
-            r.id,
-            escapeHtml(r.name),
-            escapeHtml(r.email),
-            escapeHtml(r.subject || "-"),
-            escapeHtml(r.message),
-            escapeHtml(r.status)
-        ],
+    row: r => [
+        r.id,
 
-        formData: () => ({
-            name: v("name"),
-            email: v("email"),
-            subject: v("subject"),
-            message: v("message"),
-            status: v("status")
-        })
-    },
+        escapeHtml(
+            r.name || "-"
+        ),
+
+        escapeHtml(
+            r.phone || "-"
+        ),
+
+        escapeHtml(
+            r.email || "-"
+        ),
+
+        escapeHtml(
+            r.subject || "-"
+        ),
+
+        escapeHtml(
+            r.message || "-"
+        ),
+
+        escapeHtml(
+            r.status || "Pending"
+        )
+    ],
+
+    formData: () => ({
+        name: v("name"),
+
+        phone: v("phone"),
+
+        email: v("email"),
+
+        subject: v("subject"),
+
+        message: v("message"),
+
+        status: v("status")
+    })
+},
 
 
     /* ================= ORDERS ================= */
