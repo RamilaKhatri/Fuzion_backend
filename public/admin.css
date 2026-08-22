@@ -1745,46 +1745,41 @@ p {
 
 /* =========================================================
    31. GALLERY PAGE
+   PREMIUM CARD + TABLE STYLE
    ========================================================= */
 
+/* Gallery grid - if used elsewhere */
 .gallery-grid {
     display: grid;
-
     grid-template-columns:
         repeat(4, minmax(0, 1fr));
-
     gap: 20px;
 }
 
 .gallery-card {
     background: #ffffff;
-
     border: 1px solid #eadfd5;
-
     border-radius: 14px;
-
     overflow: hidden;
-
     box-shadow:
         0 5px 18px rgba(60, 35, 20, 0.07);
-
-    transition: 0.3s ease;
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease,
+        border-color 0.3s ease;
 }
 
 .gallery-card:hover {
     transform: translateY(-5px);
-
+    border-color: #d6a54a;
     box-shadow:
         0 12px 28px rgba(60, 35, 20, 0.12);
 }
 
 .gallery-card img {
     width: 100%;
-
     height: 190px;
-
     object-fit: cover;
-
     display: block;
 }
 
@@ -1794,16 +1789,285 @@ p {
 
 .gallery-card h3 {
     font-size: 18px;
-
     color: #4b3020;
-
     margin-bottom: 6px;
 }
 
 .gallery-card p {
     color: #111111;
+    font-size: 16px;
+}
+
+
+/* =========================================================
+   GALLERY FORM PANEL
+   ========================================================= */
+
+#manageForm {
+    display: grid;
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+#manageForm label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: #2d211b;
 
     font-size: 18px;
+    font-weight: 700;
+}
+
+#manageForm input[type="text"],
+#manageForm input[type="file"],
+#manageForm select,
+#manageForm textarea {
+    width: 100%;
+
+    padding: 13px 15px;
+
+    border: 1px solid #dcd0c5;
+
+    border-radius: 9px;
+
+    background: #fffdfb;
+
+    color: #2d211b;
+
+    font-size: 18px;
+
+    outline: none;
+
+    transition:
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+#manageForm input[type="file"] {
+    padding: 10px;
+}
+
+#manageForm textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+#manageForm input:focus,
+#manageForm select:focus,
+#manageForm textarea:focus {
+    border-color: #e6a72c;
+
+    box-shadow:
+        0 0 0 3px rgba(230, 167, 44, 0.15);
+}
+
+
+/* =========================================================
+   GALLERY IMAGE PREVIEW
+   ========================================================= */
+
+#imagePreviewContainer {
+    display: none;
+
+    grid-column: 1 / -1;
+
+    margin-top: 10px;
+
+    padding: 15px;
+
+    background: #faf6f0;
+
+    border: 1px dashed #d8c7b8;
+
+    border-radius: 12px;
+}
+
+#imagePreviewContainer label {
+    color: #4b3020;
+}
+
+#imagePreview {
+    width: 190px !important;
+    height: 130px !important;
+
+    object-fit: cover;
+
+    border-radius: 10px !important;
+
+    border: 2px solid #e4d5c5 !important;
+
+    margin-top: 8px;
+
+    display: block;
+
+    box-shadow:
+        0 5px 18px rgba(60, 35, 20, 0.10);
+}
+
+
+/* =========================================================
+   GALLERY HELP TEXT
+   ========================================================= */
+
+#imageHelp {
+    display: block;
+
+    margin-top: 6px;
+
+    color: #555555 !important;
+
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   GALLERY TABLE
+   ========================================================= */
+
+#tbody img {
+    width: 80px !important;
+    height: 60px !important;
+
+    object-fit: cover;
+
+    border-radius: 9px !important;
+
+    border: 1px solid #e4d5c5;
+
+    display: block;
+
+    box-shadow:
+        0 4px 12px rgba(60, 35, 20, 0.08);
+}
+
+#tbody tr {
+    transition:
+        background-color 0.2s ease;
+}
+
+#tbody tr:hover {
+    background: #fffaf3;
+}
+
+
+/* =========================================================
+   GALLERY ACTION BUTTONS
+   ========================================================= */
+
+#tbody .btn {
+    min-height: 40px;
+
+    padding: 8px 13px;
+
+    border-radius: 8px;
+
+    font-size: 15px;
+}
+
+#tbody .btn + .btn {
+    margin-left: 6px;
+}
+
+
+/* =========================================================
+   GALLERY STATUS
+   ========================================================= */
+
+#tbody td:nth-child(6) {
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   SHOW ON HOME
+   ========================================================= */
+
+#showOnHome {
+    min-width: 120px;
+}
+
+
+/* =========================================================
+   GALLERY TABLE PANEL
+   ========================================================= */
+
+#refreshBtn {
+    min-width: 95px;
+}
+
+
+/* =========================================================
+   GALLERY RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1200px) {
+
+    .gallery-grid {
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+    }
+
+}
+
+@media (max-width: 900px) {
+
+    #manageForm {
+        grid-template-columns: 1fr;
+    }
+
+    #manageForm .full {
+        grid-column: 1 / -1;
+    }
+
+    .gallery-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+}
+
+@media (max-width: 700px) {
+
+    #manageForm {
+        grid-template-columns: 1fr;
+    }
+
+    .gallery-grid {
+        grid-template-columns: 1fr;
+    }
+
+    #imagePreview {
+        width: 160px !important;
+        height: 110px !important;
+    }
+
+}
+
+@media (max-width: 480px) {
+
+    #manageForm label {
+        font-size: 16px;
+    }
+
+    #manageForm input[type="text"],
+    #manageForm input[type="file"],
+    #manageForm select,
+    #manageForm textarea {
+        font-size: 16px;
+    }
+
+    #tbody .btn {
+        width: 100%;
+        margin: 3px 0;
+    }
+
+    #tbody .btn + .btn {
+        margin-left: 0;
+    }
+
 }
 
 
