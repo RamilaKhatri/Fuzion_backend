@@ -2,45 +2,121 @@ const express = require("express");
 
 const router = express.Router();
 
+
+/* =====================================================
+   MIDDLEWARE
+===================================================== */
+
+const authMiddleware =
+    require(
+        "../middleware/authmiddleware"
+    );
+
+const adminMiddleware =
+    require(
+        "../middleware/adminmiddleware"
+    );
+
+
+/* =====================================================
+   CONTROLLER
+===================================================== */
+
 const {
+
     getTeamMembers,
+
     getAllTeamMembers,
+
     createTeamMember,
+
     updateTeamMember,
+
     deleteTeamMember
-} = require("../controllers/teamController");
 
-const upload = require("../middleware/teamUpload");
-
-
-/* PUBLIC */
-
-router.get("/", getTeamMembers);
+} = require(
+    "../controllers/teamController"
+);
 
 
-/* ADMIN */
+/* =====================================================
+   PUBLIC
+===================================================== */
 
-router.get("/all", getAllTeamMembers);
+router.get(
+    "/",
+    getTeamMembers
+);
 
+
+/* =====================================================
+   ADMIN - ALL
+===================================================== */
+
+router.get(
+    "/all",
+
+    authMiddleware,
+
+    adminMiddleware,
+
+    getAllTeamMembers
+);
+
+
+/* =====================================================
+   ADMIN - CREATE
+===================================================== */
 
 router.post(
+
     "/",
-    upload.single("image"),
+
+    authMiddleware,
+
+    adminMiddleware,
+
     createTeamMember
+
 );
 
+
+/* =====================================================
+   ADMIN - UPDATE
+===================================================== */
 
 router.put(
+
     "/:id",
-    upload.single("image"),
+
+    authMiddleware,
+
+    adminMiddleware,
+
     updateTeamMember
+
 );
 
+
+/* =====================================================
+   ADMIN - DELETE
+===================================================== */
 
 router.delete(
+
     "/:id",
+
+    authMiddleware,
+
+    adminMiddleware,
+
     deleteTeamMember
+
 );
 
+
+/* =====================================================
+   EXPORT
+===================================================== */
 
 module.exports = router;

@@ -1,6 +1,7 @@
 /* =====================================================
    FUZION CAFE ADMIN
    TEAM MANAGEMENT
+   UploadThing Version
 ===================================================== */
 
 let editingId = null;
@@ -9,31 +10,242 @@ const API_URL = "/api/team";
 
 
 /* =====================================================
+   UPLOADTHING
+===================================================== */
+
+import {
+    genUploader
+} from "https://cdn.jsdelivr.net/npm/uploadthing@7.7.4/client/+esm";
+
+
+const {
+    uploadFiles
+} = genUploader({
+    url: "/api/uploadthing"
+});
+
+
+/* =====================================================
    MESSAGE
 ===================================================== */
 
-function showMessage(message, type = "success") {
+function showMessage(
+    message,
+    type = "success"
+) {
 
-    const element = document.getElementById("message");
+    const element =
+        document.getElementById(
+            "message"
+        );
 
     if (!element) {
         return;
     }
 
-    element.style.display = "block";
-    element.textContent = message;
+    element.style.display =
+        "block";
+
+    element.textContent =
+        message;
+
 
     if (type === "error") {
 
-        element.style.background = "#f8d7da";
-        element.style.color = "#842029";
+        element.style.background =
+            "#f8d7da";
+
+        element.style.color =
+            "#842029";
 
     } else {
 
-        element.style.background = "#dff3e4";
-        element.style.color = "#245b32";
+        element.style.background =
+            "#dff3e4";
 
+        element.style.color =
+            "#245b32";
     }
+}
+
+
+/* =====================================================
+   ESCAPE HTML
+===================================================== */
+
+function escapeHtml(value) {
+
+    return String(
+        value ?? ""
+    ).replace(
+        /[&<>"']/g,
+        character => {
+
+            const map = {
+
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#039;"
+
+            };
+
+            return map[
+                character
+            ];
+
+        }
+    );
+}
+
+
+/* =====================================================
+   AUTH TOKEN
+===================================================== */
+
+function getToken() {
+
+    return localStorage.getItem(
+        "token"
+    );
+}
+
+
+/* =====================================================
+   CHECK LOGIN
+===================================================== */
+
+function checkLogin() {
+
+    const token =
+        getToken();
+
+    if (!token) {
+
+        window.location.href =
+            "/login.html";
+
+        return false;
+    }
+
+    return true;
+}
+
+
+/* =====================================================
+   AUTH HEADERS
+===================================================== */
+
+function getAuthHeaders() {
+
+    const token =
+        getToken();
+
+    return {
+
+        Authorization:
+            `Bearer ${token}`
+
+    };
+}
+
+
+/* =====================================================
+   UPLOAD IMAGE TO UPLOADTHING
+===================================================== */
+
+async function uploadTeamImage(
+    file
+) {
+
+    if (!file) {
+
+        throw new Error(
+            "Please select a team image."
+        );
+    }
+
+
+    const token =
+        getToken();
+
+
+    if (!token) {
+
+        throw new Error(
+            "You are not logged in."
+        );
+    }
+
+
+    console.log(
+        "Uploading team image to UploadThing..."
+    );
+
+
+    const result =
+        await uploadFiles(
+
+            "teamImage",
+
+            {
+
+                files: [file],
+
+                headers: {
+
+                    Authorization:
+                        `Bearer ${token}`
+
+                }
+
+            }
+
+        );
+
+
+    console.log(
+        "Team UploadThing result:",
+        result
+    );
+
+
+    if (
+        !result ||
+        !result.length
+    ) {
+
+        throw new Error(
+            "UploadThing did not return an uploaded image."
+        );
+    }
+
+
+    const uploadedFile =
+        result[0];
+
+
+    const imageUrl =
+        uploadedFile.ufsUrl ||
+        uploadedFile.url;
+
+
+    if (!imageUrl) {
+
+        throw new Error(
+            "UploadThing image URL not found."
+        );
+    }
+
+
+    console.log(
+        "Team image URL:",
+        imageUrl
+    );
+
+
+    return imageUrl;
 }
 
 
@@ -44,29 +256,73 @@ function showMessage(message, type = "success") {
 async function loadTeamMembers() {
 
     const tbody =
-        document.getElementById("teamTableBody");
+        document.getElementById(
+            "teamTableBody"
+        );
+
 
     if (!tbody) {
         return;
     }
 
+
+    if (!checkLogin()) {
+        return;
+    }
+
+
     try {
 
         tbody.innerHTML = `
+
             <tr>
-                <td colspan="6" class="empty">
+
+                <td
+                    colspan="6"
+                    class="empty"
+                >
                     Loading...
                 </td>
+
             </tr>
+
         `;
 
 
         const response =
-            await fetch(`${API_URL}/all`);
+            await fetch(
+                `${API_URL}/all`,
+                {
+                    method: "GET",
+
+                    headers:
+                        getAuthHeaders()
+                }
+            );
 
 
         const data =
             await response.json();
+
+
+        if (
+            response.status === 401 ||
+            response.status === 403
+        ) {
+
+            localStorage.removeItem(
+                "token"
+            );
+
+            localStorage.removeItem(
+                "admin"
+            );
+
+            window.location.href =
+                "/login.html";
+
+            return;
+        }
 
 
         if (!response.ok) {
@@ -75,12 +331,13 @@ async function loadTeamMembers() {
                 data.message ||
                 "Failed to load team members"
             );
-
         }
 
 
         const members =
-            Array.isArray(data.team)
+            Array.isArray(
+                data.team
+            )
                 ? data.team
                 : [];
 
@@ -88,11 +345,18 @@ async function loadTeamMembers() {
         if (!members.length) {
 
             tbody.innerHTML = `
+
                 <tr>
-                    <td colspan="6" class="empty">
+
+                    <td
+                        colspan="6"
+                        class="empty"
+                    >
                         No team members found.
                     </td>
+
                 </tr>
+
             `;
 
             return;
@@ -100,135 +364,177 @@ async function loadTeamMembers() {
 
 
         tbody.innerHTML =
-            members.map(member => {
+            members
+                .map(
+                    member => {
 
-                let imageUrl =
-                    member.image || "";
+                        const imageUrl =
+                            member.image ||
+                            "";
 
 
-                /*
-                 * Convert relative image path
-                 * into full backend URL.
-                 *
-                 * Example:
-                 * /uploads/team/team-123.jpg
-                 *
-                 * becomes:
-                 * http://localhost:5000/uploads/team/team-123.jpg
-                 */
+                        return `
 
-                if (
-                    imageUrl &&
-                    !imageUrl.startsWith("http://") &&
-                    !imageUrl.startsWith("https://")
-                ) {
+                            <tr>
 
-                    if (imageUrl.startsWith("/")) {
+                                <td>
+                                    ${escapeHtml(
+                                        member.id
+                                    )}
+                                </td>
 
-                        imageUrl =
-                            window.location.origin +
-                            imageUrl;
 
-                    } else {
+                                <td>
+                                    ${escapeHtml(
+                                        member.name ||
+                                        ""
+                                    )}
+                                </td>
 
-                        imageUrl =
-                            window.location.origin +
-                            "/" +
-                            imageUrl;
+
+                                <td>
+                                    ${escapeHtml(
+                                        member.position ||
+                                        ""
+                                    )}
+                                </td>
+
+
+                                <td>
+
+                                    ${
+                                        imageUrl
+
+                                            ? `
+
+                                                <img
+                                                    src="${escapeHtml(
+                                                        imageUrl
+                                                    )}"
+                                                    alt="${escapeHtml(
+                                                        member.name ||
+                                                        "Team Member"
+                                                    )}"
+                                                    style="
+                                                        width:70px;
+                                                        height:70px;
+                                                        object-fit:cover;
+                                                        border-radius:8px;
+                                                        display:block;
+                                                    "
+                                                    onerror="
+                                                        this.style.display='none';
+                                                    "
+                                                >
+
+                                            `
+
+                                            : "-"
+                                    }
+
+                                </td>
+
+
+                                <td>
+                                    ${escapeHtml(
+                                        member.status ||
+                                        "Active"
+                                    )}
+                                </td>
+
+
+                                <td>
+
+                                    <div class="actions">
+
+                                        <button
+                                            type="button"
+                                            class="btn secondary"
+                                            data-edit-id="${Number(
+                                                member.id
+                                            )}"
+                                        >
+                                            Edit
+                                        </button>
+
+
+                                        <button
+                                            type="button"
+                                            class="btn danger"
+                                            data-delete-id="${Number(
+                                                member.id
+                                            )}"
+                                        >
+                                            Delete
+                                        </button>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                        `;
 
                     }
+                )
+                .join("");
+
+
+        /* =============================================
+           EDIT BUTTONS
+        ============================================= */
+
+        document
+            .querySelectorAll(
+                "[data-edit-id]"
+            )
+            .forEach(
+                button => {
+
+                    button.addEventListener(
+                        "click",
+                        () => {
+
+                            editTeamMember(
+                                Number(
+                                    button.dataset.editId
+                                )
+                            );
+
+                        }
+                    );
 
                 }
+            );
 
 
-                return `
+        /* =============================================
+           DELETE BUTTONS
+        ============================================= */
 
-                    <tr>
+        document
+            .querySelectorAll(
+                "[data-delete-id]"
+            )
+            .forEach(
+                button => {
 
-                        <td>
-                            ${escapeHtml(member.id)}
-                        </td>
+                    button.addEventListener(
+                        "click",
+                        () => {
 
+                            deleteTeamMember(
+                                Number(
+                                    button.dataset.deleteId
+                                )
+                            );
 
-                        <td>
-                            ${escapeHtml(
-                                member.name || ""
-                            )}
-                        </td>
+                        }
+                    );
 
-
-                        <td>
-                            ${escapeHtml(
-                                member.position || ""
-                            )}
-                        </td>
-
-
-                        <td>
-
-                            ${
-                                imageUrl
-                                    ? `
-                                        <img
-                                            src="${escapeHtml(imageUrl)}"
-                                            alt="${escapeHtml(
-                                                member.name ||
-                                                "Team Member"
-                                            )}"
-                                            style="
-                                                width:70px;
-                                                height:70px;
-                                                object-fit:cover;
-                                                border-radius:8px;
-                                                display:block;
-                                            "
-                                            onerror="this.style.display='none';"
-                                        >
-                                      `
-                                    : "-"
-                            }
-
-                        </td>
-
-
-                        <td>
-                            ${escapeHtml(
-                                member.status ||
-                                "Active"
-                            )}
-                        </td>
-
-
-                        <td>
-
-                            <div class="actions">
-
-                                <button
-                                    type="button"
-                                    class="btn secondary"
-                                    onclick="editTeamMember(${Number(member.id)})"
-                                >
-                                    Edit
-                                </button>
-
-
-                                <button
-                                    type="button"
-                                    class="btn danger"
-                                    onclick="deleteTeamMember(${Number(member.id)})"
-                                >
-                                    Delete
-                                </button>
-
-                            </div>
-
-                        </td>
-
-                    </tr>
-
-                `;
-
-            }).join("");
+                }
+            );
 
 
     } catch (error) {
@@ -240,11 +546,18 @@ async function loadTeamMembers() {
 
 
         tbody.innerHTML = `
+
             <tr>
-                <td colspan="6" class="empty">
+
+                <td
+                    colspan="6"
+                    class="empty"
+                >
                     Failed to load team members.
                 </td>
+
             </tr>
+
         `;
 
 
@@ -253,236 +566,254 @@ async function loadTeamMembers() {
             "Failed to load team members",
             "error"
         );
-
     }
 }
 
 
 /* =====================================================
-   SAVE / CREATE / UPDATE TEAM MEMBER
+   SAVE / CREATE / UPDATE
 ===================================================== */
 
-async function saveTeamMember(event) {
+async function saveTeamMember(
+    event
+) {
 
     event.preventDefault();
 
 
-    try {
+    if (!checkLogin()) {
+        return;
+    }
 
-        const nameInput =
-            document.getElementById("name");
 
-        const positionInput =
-            document.getElementById("position");
+    const nameInput =
+        document.getElementById(
+            "name"
+        );
 
-        const statusInput =
-            document.getElementById("status");
+    const positionInput =
+        document.getElementById(
+            "position"
+        );
 
-        const imageInput =
-            document.getElementById("image");
+    const statusInput =
+        document.getElementById(
+            "status"
+        );
+
+    const imageInput =
+        document.getElementById(
+            "image"
+        );
+
+
+    if (
+        !nameInput ||
+        !positionInput ||
+        !statusInput ||
+        !imageInput
+    ) {
+
+        showMessage(
+            "Team form fields are missing.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    const name =
+        nameInput.value.trim();
+
+    const position =
+        positionInput.value.trim();
+
+    const status =
+        statusInput.value ||
+        "Active";
+
+
+    /* =============================================
+       VALIDATION
+    ============================================= */
+
+    if (!name) {
+
+        showMessage(
+            "Name is required.",
+            "error"
+        );
+
+        nameInput.focus();
+
+        return;
+    }
+
+
+    if (!position) {
+
+        showMessage(
+            "Position is required.",
+            "error"
+        );
+
+        positionInput.focus();
+
+        return;
+    }
+
+
+    const file =
+        imageInput.files &&
+        imageInput.files.length
+            ? imageInput.files[0]
+            : null;
+
+
+    /* CREATE requires image */
+
+    if (!editingId && !file) {
+
+        showMessage(
+            "Please select a team image.",
+            "error"
+        );
+
+        imageInput.focus();
+
+        return;
+    }
+
+
+    /* =============================================
+       IMAGE VALIDATION
+    ============================================= */
+
+    if (file) {
+
+        const allowedTypes = [
+
+            "image/jpeg",
+            "image/jpg",
+            "image/png",
+            "image/webp"
+
+        ];
 
 
         if (
-            !nameInput ||
-            !positionInput ||
-            !statusInput ||
-            !imageInput
-        ) {
-
-            throw new Error(
-                "Team form fields are missing."
-            );
-
-        }
-
-
-        const name =
-            nameInput.value.trim();
-
-        const position =
-            positionInput.value.trim();
-
-        const status =
-            statusInput.value || "Active";
-
-
-        /* ==========================================
-           VALIDATION
-        ========================================== */
-
-        if (!name) {
-
-            showMessage(
-                "Name is required.",
-                "error"
-            );
-
-            nameInput.focus();
-
-            return;
-        }
-
-
-        if (!position) {
-
-            showMessage(
-                "Position is required.",
-                "error"
-            );
-
-            positionInput.focus();
-
-            return;
-        }
-
-
-        /*
-         * For CREATE:
-         * image is required.
-         *
-         * For UPDATE:
-         * image is optional because the existing
-         * image will remain if no new image is selected.
-         */
-
-        if (
-            !editingId &&
-            (
-                !imageInput.files ||
-                imageInput.files.length === 0
+            !allowedTypes.includes(
+                file.type
             )
         ) {
 
             showMessage(
-                "Please select a team image.",
+                "Only JPG, JPEG, PNG and WEBP images are allowed.",
                 "error"
             );
 
-            imageInput.focus();
+            imageInput.value = "";
 
             return;
         }
 
 
-        /* ==========================================
-           CHECK IMAGE TYPE
-        ========================================== */
+        const maxSize =
+            5 * 1024 * 1024;
+
 
         if (
-            imageInput.files &&
-            imageInput.files.length > 0
+            file.size > maxSize
         ) {
 
-            const file =
-                imageInput.files[0];
+            showMessage(
+                "Image size must be less than 5 MB.",
+                "error"
+            );
+
+            imageInput.value = "";
+
+            return;
+        }
+    }
 
 
-            const allowedTypes = [
-                "image/jpeg",
-                "image/jpg",
-                "image/png",
-                "image/webp"
-            ];
+    const wasEditing =
+        Boolean(editingId);
 
 
-            if (
-                !allowedTypes.includes(
-                    file.type
-                )
-            ) {
+    const saveButton =
+        document.getElementById(
+            "saveButton"
+        );
 
-                showMessage(
-                    "Only JPG, JPEG, PNG and WEBP images are allowed.",
-                    "error"
+
+    try {
+
+        if (saveButton) {
+
+            saveButton.disabled =
+                true;
+
+            saveButton.textContent =
+                wasEditing
+                    ? "Uploading..."
+                    : "Uploading...";
+        }
+
+
+        /* =========================================
+           UPLOAD NEW IMAGE
+        ========================================= */
+
+        let imageUrl = "";
+
+
+        if (file) {
+
+            imageUrl =
+                await uploadTeamImage(
+                    file
                 );
-
-                imageInput.value = "";
-
-                return;
-            }
-
-
-            /*
-             * Backend limit:
-             * 5 MB
-             */
-
-            const maxSize =
-                5 * 1024 * 1024;
-
-
-            if (file.size > maxSize) {
-
-                showMessage(
-                    "Image size must be less than 5 MB.",
-                    "error"
-                );
-
-                imageInput.value = "";
-
-                return;
-            }
 
         }
 
 
-        /* ==========================================
-           REMEMBER WHETHER THIS IS UPDATE
-        ========================================== */
+        /* =========================================
+           PREPARE JSON
+        ========================================= */
 
-        const wasEditing =
-            Boolean(editingId);
+        const payload = {
 
+            name,
 
-        /* ==========================================
-           CREATE FORMDATA
-        ========================================== */
+            position,
 
-        const formData =
-            new FormData();
-
-
-        formData.append(
-            "name",
-            name
-        );
-
-
-        formData.append(
-            "position",
-            position
-        );
-
-
-        formData.append(
-            "status",
             status
-        );
+
+        };
 
 
         /*
-         * Add image only when selected.
+         * New image selected:
+         * send UploadThing URL.
          *
-         * IMPORTANT:
-         * Do NOT manually add Content-Type.
+         * Editing without new image:
+         * backend keeps old URL.
          */
 
-        if (
-            imageInput.files &&
-            imageInput.files.length > 0
-        ) {
+        if (imageUrl) {
 
-            formData.append(
-                "image",
-                imageInput.files[0]
-            );
+            payload.image =
+                imageUrl;
 
         }
 
 
-        /* ==========================================
-           URL
-        ========================================== */
+        /* =========================================
+           REQUEST
+        ========================================= */
 
         const url =
             editingId
@@ -490,55 +821,45 @@ async function saveTeamMember(event) {
                 : API_URL;
 
 
-        /* ==========================================
-           METHOD
-        ========================================== */
-
         const method =
             editingId
                 ? "PUT"
                 : "POST";
 
 
-        /* ==========================================
-           DISABLE SAVE BUTTON
-        ========================================== */
-
-        const saveButton =
-            document.getElementById(
-                "saveButton"
-            );
-
-
         if (saveButton) {
-
-            saveButton.disabled = true;
 
             saveButton.textContent =
                 wasEditing
                     ? "Updating..."
                     : "Saving...";
-
         }
 
-
-        /* ==========================================
-           SEND REQUEST
-        ========================================== */
 
         const response =
             await fetch(
                 url,
                 {
-                    method: method,
-                    body: formData
+
+                    method,
+
+                    headers: {
+
+                        ...getAuthHeaders(),
+
+                        "Content-Type":
+                            "application/json"
+
+                    },
+
+                    body:
+                        JSON.stringify(
+                            payload
+                        )
+
                 }
             );
 
-
-        /*
-         * Try to read JSON response.
-         */
 
         let result = {};
 
@@ -548,9 +869,27 @@ async function saveTeamMember(event) {
                 await response.json();
 
         } catch {
-
             result = {};
+        }
 
+
+        if (
+            response.status === 401 ||
+            response.status === 403
+        ) {
+
+            localStorage.removeItem(
+                "token"
+            );
+
+            localStorage.removeItem(
+                "admin"
+            );
+
+            window.location.href =
+                "/login.html";
+
+            return;
         }
 
 
@@ -564,20 +903,12 @@ async function saveTeamMember(event) {
                         : "add"
                 } team member`
             );
-
         }
 
 
-        /* ==========================================
-           RESET FORM
-        ========================================== */
-
-        resetTeamForm();
-
-
-        /* ==========================================
-           SUCCESS MESSAGE
-        ========================================== */
+        /* =========================================
+           SUCCESS
+        ========================================= */
 
         showMessage(
             result.message ||
@@ -585,13 +916,13 @@ async function saveTeamMember(event) {
                 wasEditing
                     ? "Team member updated successfully."
                     : "Team member added successfully."
-            )
+            ),
+            "success"
         );
 
 
-        /* ==========================================
-           RELOAD TABLE
-        ========================================== */
+        resetTeamForm();
+
 
         await loadTeamMembers();
 
@@ -613,29 +944,17 @@ async function saveTeamMember(event) {
 
     } finally {
 
-        /*
-         * Enable save button again.
-         */
-
-        const saveButton =
-            document.getElementById(
-                "saveButton"
-            );
-
-
         if (saveButton) {
 
-            saveButton.disabled = false;
+            saveButton.disabled =
+                false;
 
             saveButton.textContent =
                 editingId
                     ? "Update"
                     : "Save";
-
         }
-
     }
-
 }
 
 
@@ -643,85 +962,120 @@ async function saveTeamMember(event) {
    EDIT TEAM MEMBER
 ===================================================== */
 
-async function editTeamMember(id) {
+async function editTeamMember(
+    id
+) {
+
+    if (!checkLogin()) {
+        return;
+    }
+
 
     try {
 
         const response =
             await fetch(
-                `${API_URL}/all`
+                `${API_URL}/${id}`,
+                {
+                    method: "GET",
+                    headers:
+                        getAuthHeaders()
+                }
             );
 
 
-        const data =
-            await response.json();
+        /*
+         * Public single-member endpoint
+         * is not currently in routes.
+         *
+         * So use /all for compatibility.
+         */
+
+        let member = null;
 
 
-        if (!response.ok) {
+        if (response.ok) {
 
-            throw new Error(
-                data.message ||
-                "Failed to load team members"
-            );
+            const data =
+                await response.json();
+
+            member =
+                data.team ||
+                data;
 
         }
-
-
-        const members =
-            Array.isArray(data.team)
-                ? data.team
-                : [];
-
-
-        const member =
-            members.find(
-                item =>
-                    Number(item.id) ===
-                    Number(id)
-            );
 
 
         if (!member) {
 
-            showMessage(
-                "Team member not found.",
-                "error"
-            );
+            const allResponse =
+                await fetch(
+                    `${API_URL}/all`,
+                    {
+                        headers:
+                            getAuthHeaders()
+                    }
+                );
 
-            return;
+
+            const allData =
+                await allResponse.json();
+
+
+            const members =
+                Array.isArray(
+                    allData.team
+                )
+                    ? allData.team
+                    : [];
+
+
+            member =
+                members.find(
+                    item =>
+                        Number(item.id) ===
+                        Number(id)
+                );
         }
 
 
-        /* ==========================================
-           SET EDITING ID
-        ========================================== */
+        if (!member) {
+
+            throw new Error(
+                "Team member not found."
+            );
+        }
+
 
         editingId =
             member.id;
 
 
-        /* ==========================================
-           FILL FORM
-        ========================================== */
-
         const nameInput =
-            document.getElementById("name");
+            document.getElementById(
+                "name"
+            );
 
         const positionInput =
-            document.getElementById("position");
+            document.getElementById(
+                "position"
+            );
 
         const statusInput =
-            document.getElementById("status");
+            document.getElementById(
+                "status"
+            );
 
         const imageInput =
-            document.getElementById("image");
+            document.getElementById(
+                "image"
+            );
 
 
         if (nameInput) {
 
             nameInput.value =
                 member.name || "";
-
         }
 
 
@@ -729,39 +1083,23 @@ async function editTeamMember(id) {
 
             positionInput.value =
                 member.position || "";
-
         }
 
 
         if (statusInput) {
 
             statusInput.value =
-                member.status || "Active";
-
+                member.status ||
+                "Active";
         }
 
-
-        /*
-         * Browser does not allow us to
-         * put an existing image into a
-         * file input.
-         *
-         * So leave it empty.
-         *
-         * Backend will keep the old image
-         * if no new image is uploaded.
-         */
 
         if (imageInput) {
 
-            imageInput.value = "";
-
+            imageInput.value =
+                "";
         }
 
-
-        /* ==========================================
-           CHANGE FORM TITLE
-        ========================================== */
 
         const formTitle =
             document.getElementById(
@@ -773,13 +1111,8 @@ async function editTeamMember(id) {
 
             formTitle.textContent =
                 "Edit Team Member";
-
         }
 
-
-        /* ==========================================
-           CHANGE SAVE BUTTON
-        ========================================== */
 
         const saveButton =
             document.getElementById(
@@ -791,13 +1124,14 @@ async function editTeamMember(id) {
 
             saveButton.textContent =
                 "Update";
-
         }
 
 
-        /* ==========================================
-           SCROLL TO FORM
-        ========================================== */
+        showMessage(
+            "Editing team member. Choose a new image only if you want to replace the current image.",
+            "success"
+        );
+
 
         window.scrollTo({
 
@@ -806,11 +1140,6 @@ async function editTeamMember(id) {
             behavior: "smooth"
 
         });
-
-
-        showMessage(
-            "Editing team member. Select a new image only if you want to replace the existing image."
-        );
 
 
     } catch (error) {
@@ -826,9 +1155,7 @@ async function editTeamMember(id) {
             "Failed to edit team member.",
             "error"
         );
-
     }
-
 }
 
 
@@ -836,7 +1163,14 @@ async function editTeamMember(id) {
    DELETE TEAM MEMBER
 ===================================================== */
 
-async function deleteTeamMember(id) {
+async function deleteTeamMember(
+    id
+) {
+
+    if (!checkLogin()) {
+        return;
+    }
+
 
     const confirmed =
         confirm(
@@ -845,9 +1179,7 @@ async function deleteTeamMember(id) {
 
 
     if (!confirmed) {
-
         return;
-
     }
 
 
@@ -857,7 +1189,12 @@ async function deleteTeamMember(id) {
             await fetch(
                 `${API_URL}/${id}`,
                 {
-                    method: "DELETE"
+
+                    method: "DELETE",
+
+                    headers:
+                        getAuthHeaders()
+
                 }
             );
 
@@ -876,19 +1213,39 @@ async function deleteTeamMember(id) {
         }
 
 
+        if (
+            response.status === 401 ||
+            response.status === 403
+        ) {
+
+            localStorage.removeItem(
+                "token"
+            );
+
+            localStorage.removeItem(
+                "admin"
+            );
+
+            window.location.href =
+                "/login.html";
+
+            return;
+        }
+
+
         if (!response.ok) {
 
             throw new Error(
                 result.message ||
                 "Failed to delete team member"
             );
-
         }
 
 
         showMessage(
             result.message ||
-            "Team member deleted successfully."
+            "Team member deleted successfully.",
+            "success"
         );
 
 
@@ -908,9 +1265,7 @@ async function deleteTeamMember(id) {
             "Failed to delete team member.",
             "error"
         );
-
     }
-
 }
 
 
@@ -930,9 +1285,7 @@ function resetTeamForm() {
 
 
     if (form) {
-
         form.reset();
-
     }
 
 
@@ -946,7 +1299,6 @@ function resetTeamForm() {
 
         formTitle.textContent =
             "Add Team Member";
-
     }
 
 
@@ -960,7 +1312,6 @@ function resetTeamForm() {
 
         saveButton.textContent =
             "Save";
-
     }
 
 
@@ -972,50 +1323,14 @@ function resetTeamForm() {
 
     if (imageInput) {
 
-        imageInput.value = "";
-
+        imageInput.value =
+            "";
     }
-
 }
 
 
 /* =====================================================
-   ESCAPE HTML
-===================================================== */
-
-function escapeHtml(value) {
-
-    return String(
-        value ?? ""
-    ).replace(
-        /[&<>"']/g,
-        character => {
-
-            const map = {
-
-                "&": "&amp;",
-
-                "<": "&lt;",
-
-                ">": "&gt;",
-
-                '"': "&quot;",
-
-                "'": "&#039;"
-
-            };
-
-
-            return map[character];
-
-        }
-    );
-
-}
-
-
-/* =====================================================
-   FORM SUBMIT
+   START
 ===================================================== */
 
 document.addEventListener(
@@ -1034,23 +1349,17 @@ document.addEventListener(
                 "submit",
                 saveTeamMember
             );
-
         }
 
 
-        /*
-         * Load team members when page
-         * is ready.
-         */
-
         loadTeamMembers();
-
     }
 );
 
 
 /* =====================================================
-   MAKE FUNCTIONS AVAILABLE TO HTML
+   GLOBAL FUNCTIONS
+   Needed by existing HTML buttons
 ===================================================== */
 
 window.loadTeamMembers =
