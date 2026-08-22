@@ -17,7 +17,8 @@ const Enquiry = sequelize.define(
 
         phone: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
+            defaultValue: ""
         },
 
         email: {
