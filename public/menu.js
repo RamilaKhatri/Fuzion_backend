@@ -16,9 +16,55 @@ const formTitle = document.getElementById("formTitle");
 const cancelButton = document.getElementById("cancelBtn");
 const imageInput = document.getElementById("image");
 const imagePreview = document.getElementById("imagePreview");
+const categorySelect = document.getElementById("category");
+const newCategoryInput = document.getElementById("newCategory");
 
 let editingId = null;
 let currentImage = null;
+let knownCategories = [];
+
+// ==========================================
+// CATEGORY DROPDOWN
+// ==========================================
+
+function renderCategoryOptions(selected = "") {
+  const options = [`<option value="">Select a category...</option>`];
+
+  knownCategories.forEach((category) => {
+    const isSelected = category === selected ? " selected" : "";
+    options.push(
+      `<option value="${escapeAttribute(category)}"${isSelected}>${escapeHTML(category)}</option>`
+    );
+  });
+
+  options.push(`<option value="__new__">+ Add new category</option>`);
+
+  categorySelect.innerHTML = options.join("");
+}
+
+function updateKnownCategories(items) {
+  const categories = new Set();
+
+  (items || []).forEach((item) => {
+    const value = String(item.category || "").trim();
+    if (value) categories.add(value);
+  });
+
+  knownCategories = Array.from(categories).sort((a, b) =>
+    a.localeCompare(b)
+  );
+}
+
+if (categorySelect) {
+  categorySelect.addEventListener("change", () => {
+    const isNew = categorySelect.value === "__new__";
+    newCategoryInput.style.display = isNew ? "block" : "none";
+    if (isNew) {
+      newCategoryInput.value = "";
+      newCategoryInput.focus();
+    }
+  });
+}
 
 // ==========================================
 // IMAGE PREVIEW
@@ -67,6 +113,9 @@ async function loadMenuItems() {
     if (!response.ok) {
       throw new Error(data.message || "Failed to load menu");
     }
+
+    updateKnownCategories(data);
+    renderCategoryOptions(categorySelect ? categorySelect.value : "");
 
     displayMenuItems(data);
   } catch (error) {
@@ -149,8 +198,18 @@ async function saveMenuItem() {
   const name =
     document.getElementById("name").value.trim();
 
-  const category =
-    document.getElementById("category").value.trim();
+  let category = categorySelect.value;
+
+  if (category === "__new__") {
+    category = newCategoryInput.value.trim();
+
+    // If this name already exists with different casing/spacing,
+    // reuse the existing spelling instead of creating a near-duplicate.
+    const existingMatch = knownCategories.find(
+      (existing) => existing.toLowerCase() === category.toLowerCase()
+    );
+    if (existingMatch) category = existingMatch;
+  }
 
   const price =
     document.getElementById("price").value;
@@ -322,7 +381,15 @@ async function editMenuItem(id) {
     }
 
     document.getElementById("name").value = item.name;
-    document.getElementById("category").value = item.category;
+
+    const itemCategory = String(item.category || "").trim();
+    if (itemCategory && !knownCategories.includes(itemCategory)) {
+      knownCategories.push(itemCategory);
+      knownCategories.sort((a, b) => a.localeCompare(b));
+    }
+    renderCategoryOptions(itemCategory);
+    newCategoryInput.style.display = "none";
+
     document.getElementById("price").value = item.price;
     document.getElementById("description").value = item.description || "";
     document.getElementById("available").value = item.available ? "true" : "false";
@@ -351,7 +418,9 @@ async function editMenuItem(id) {
 
 function resetForm() {
   document.getElementById("name").value = "";
-  document.getElementById("category").value = "";
+  renderCategoryOptions("");
+  newCategoryInput.value = "";
+  newCategoryInput.style.display = "none";
   document.getElementById("price").value = "";
   document.getElementById("description").value = "";
   document.getElementById("available").value = "true";

@@ -131,7 +131,16 @@
 
           <div class="field">
             <label for="category">Category *</label>
-            <input id="category" type="text" placeholder="e.g. Snacks, Chicken, Coffee...">
+            <select id="category">
+              <option value="">Select a category...</option>
+              <option value="__new__">+ Add new category</option>
+            </select>
+            <input
+              id="newCategory"
+              type="text"
+              placeholder="e.g. Desserts"
+              style="display:none; margin-top:8px"
+            >
           </div>
 
           <div class="field">
