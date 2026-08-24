@@ -1,4 +1,5 @@
 const Enquiry = require("../models/Enquiry");
+const { sendEnquiryNotification } = require("../utils/email");
 
 
 /* =====================================================
@@ -294,6 +295,17 @@ const createEnquiry = async (
                     "Pending"
 
             });
+
+
+        /* ==========================================
+           SEND EMAIL NOTIFICATION
+           If this fails, the enquiry is still saved —
+           email is a nice-to-have, not a requirement.
+        ========================================== */
+
+        sendEnquiryNotification(
+            enquiry
+        );
 
 
         /* ==========================================
