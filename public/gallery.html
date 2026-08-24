@@ -304,7 +304,18 @@
                             Behind The Scenes
                         </option>
 
+                        <option value="__new__">
+                            + Add new category
+                        </option>
+
                     </select>
+
+                    <input
+                        id="newCategory"
+                        type="text"
+                        placeholder="e.g. Seasonal Specials"
+                        style="display:none; margin-top:8px"
+                    >
 
                 </div>
 
@@ -618,6 +629,18 @@ const showOnHome =
     );
 
 
+const categorySelect =
+    document.getElementById(
+        "category"
+    );
+
+
+const newCategoryInput =
+    document.getElementById(
+        "newCategory"
+    );
+
+
 /*
 =========================================================
 STATE
@@ -643,6 +666,125 @@ function showMessage(
 
     message.className =
         "message " + type;
+
+}
+
+
+/*
+=========================================================
+CATEGORY DROPDOWN
+=========================================================
+*/
+
+const BASE_CATEGORIES = [
+    { value: "food", label: "Food" },
+    { value: "drinks", label: "Drinks" },
+    { value: "events", label: "Events" },
+    { value: "ambiance", label: "Ambiance" },
+    { value: "customer-memory", label: "Customer Memory" },
+    { value: "behind-scenes", label: "Behind The Scenes" }
+];
+
+let knownCategories =
+    BASE_CATEGORIES.map(
+        category => category.value
+    );
+
+
+function renderCategoryOptions(
+    selected = ""
+) {
+
+    const options =
+        BASE_CATEGORIES.map(
+            category =>
+                `<option value="${category.value}">${category.label}</option>`
+        );
+
+
+    knownCategories.forEach(
+        category => {
+
+            const alreadyListed =
+                BASE_CATEGORIES.some(
+                    base => base.value === category
+                );
+
+            if (!alreadyListed) {
+
+                options.push(
+                    `<option value="${category}">${category}</option>`
+                );
+
+            }
+
+        }
+    );
+
+
+    options.push(
+        `<option value="__new__">+ Add new category</option>`
+    );
+
+
+    categorySelect.innerHTML =
+        options.join("");
+
+
+    categorySelect.value =
+        selected || "food";
+
+}
+
+
+function updateKnownCategories(
+    images
+) {
+
+    (images || []).forEach(
+        image => {
+
+            const value =
+                String(
+                    image.category || ""
+                ).trim();
+
+            if (
+                value &&
+                !knownCategories.includes(value)
+            ) {
+
+                knownCategories.push(value);
+
+            }
+
+        }
+    );
+
+}
+
+
+if (categorySelect) {
+
+    categorySelect.addEventListener(
+        "change",
+        () => {
+
+            const isNew =
+                categorySelect.value === "__new__";
+
+            newCategoryInput.style.display =
+                isNew ? "block" : "none";
+
+            if (isNew) {
+
+                newCategoryInput.value = "";
+                newCategoryInput.focus();
+
+            }
+
+        }
+    );
 
 }
 
@@ -847,10 +989,15 @@ function clearForm() {
         "galleryId"
     ).value = "";
 
-    document.getElementById(
-        "category"
-    ).value =
-        "food";
+    renderCategoryOptions(
+        "food"
+    );
+
+    newCategoryInput.value =
+        "";
+
+    newCategoryInput.style.display =
+        "none";
 
     document.getElementById(
         "status"
@@ -1066,6 +1213,17 @@ async function loadData() {
             Array.isArray(data)
                 ? data
                 : data.images || [];
+
+
+        updateKnownCategories(
+            images
+        );
+
+        renderCategoryOptions(
+            categorySelect.value !== "__new__"
+                ? categorySelect.value
+                : ""
+        );
 
 
         tbody.innerHTML =
@@ -1401,11 +1559,24 @@ async function editGallery(
             image.title || "";
 
 
-        document.getElementById(
-            "category"
-        ).value =
-            image.category ||
-            "food";
+        const itemCategory =
+            String(
+                image.category || "food"
+            ).trim() || "food";
+
+        if (!knownCategories.includes(itemCategory)) {
+            knownCategories.push(itemCategory);
+        }
+
+        renderCategoryOptions(
+            itemCategory
+        );
+
+        newCategoryInput.value =
+            "";
+
+        newCategoryInput.style.display =
+            "none";
 
 
         document.getElementById(
@@ -1515,10 +1686,28 @@ form.addEventListener(
             ).value.trim();
 
 
-        const category =
-            document.getElementById(
-                "category"
-            ).value;
+        let category =
+            categorySelect.value;
+
+
+        if (category === "__new__") {
+
+            category =
+                newCategoryInput.value.trim();
+
+
+            const existingMatch =
+                knownCategories.find(
+                    existing =>
+                        existing.toLowerCase() ===
+                        category.toLowerCase()
+                );
+
+            if (existingMatch) {
+                category = existingMatch;
+            }
+
+        }
 
 
         const description =
@@ -1551,6 +1740,18 @@ form.addEventListener(
 
             showMessage(
                 "Title is required.",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        if (!category) {
+
+            showMessage(
+                "Please enter a name for the new category.",
                 "error"
             );
 
