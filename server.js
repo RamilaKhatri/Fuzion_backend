@@ -59,7 +59,7 @@ require("./models/MenuItem");
 require("./models/Order");
 require("./models/Gallery");
 require("./models/Newsletter");
-
+require("./models/Review");
 
 /* =====================================================
    LOAD ROUTES
@@ -101,6 +101,9 @@ const galleryRoutes =
 const newsletterRoutes =
     require("./routes/newsletterRoutes");
 
+
+const reviewRoutes =
+    require("./routes/reviewRoutes");
 
 /* =====================================================
    CREATE EXPRESS APP
@@ -271,6 +274,11 @@ app.use(
     newsletterRoutes
 );
 
+
+app.use(
+    "/api/reviews",
+    reviewRoutes
+);
 
 /* =====================================================
    CONTACT
