@@ -2166,6 +2166,616 @@ footer {
 
 
 /* =========================================================
+   REVIEWS ADMIN PAGE
+========================================================= */
+
+.reviews-summary-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 18px;
+
+}
+
+
+.review-summary-card {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 20px;
+
+    background: #ffffff;
+
+    border: 1px solid #eadfd5;
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 5px 18px
+        rgba(60,35,20,.06);
+
+}
+
+
+.review-summary-icon {
+
+    width: 50px;
+
+    height: 50px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background: #f0ddae;
+
+    color: #c48718;
+
+    font-size: 20px;
+
+}
+
+
+.review-summary-card div:last-child {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 3px;
+
+}
+
+
+.review-summary-card span {
+
+    color: #6b6258;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+}
+
+
+.review-summary-card strong {
+
+    color: #8b4513;
+
+    font-size: 28px;
+
+    line-height: 1.1;
+
+}
+
+
+/* =========================================================
+   REVIEWS GRID
+========================================================= */
+
+.admin-reviews-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 20px;
+
+}
+
+
+.admin-reviews-loading,
+.admin-reviews-empty,
+.admin-reviews-error {
+
+    grid-column: 1 / -1;
+
+    padding: 50px 20px;
+
+    text-align: center;
+
+    color: #6b6258;
+
+}
+
+
+.admin-reviews-empty h3 {
+
+    margin: 10px 0 5px;
+
+    color: #4b3020;
+
+}
+
+
+.admin-reviews-error {
+
+    color: #b42318;
+
+}
+
+
+/* =========================================================
+   REVIEW CARD
+========================================================= */
+
+.admin-review-card {
+
+    background: #ffffff;
+
+    border: 1px solid #eadfd5;
+
+    border-radius: 16px;
+
+    padding: 22px;
+
+    box-shadow:
+        0 6px 22px
+        rgba(60,35,20,.07);
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease;
+
+}
+
+
+.admin-review-card:hover {
+
+    transform: translateY(-4px);
+
+    box-shadow:
+        0 12px 28px
+        rgba(60,35,20,.12);
+
+}
+
+
+/* =========================================================
+   CARD TOP
+========================================================= */
+
+.admin-review-card-top {
+
+    display: flex;
+
+    align-items: flex-start;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+}
+
+
+.admin-review-user {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    min-width: 0;
+
+}
+
+
+.admin-review-avatar {
+
+    width: 46px;
+
+    height: 46px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            #e6a72c,
+            #b87516
+        );
+
+    color: #ffffff;
+
+    font-size: 17px;
+
+    font-weight: 700;
+
+}
+
+
+.admin-review-user h3 {
+
+    margin: 0 0 2px;
+
+    color: #2d211b;
+
+    font-size: 17px;
+
+}
+
+
+.admin-review-user span {
+
+    display: block;
+
+    color: #7a6e64;
+
+    font-size: 12px;
+
+    word-break: break-word;
+
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.review-status {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 6px 11px;
+
+    border-radius: 999px;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+
+}
+
+
+.review-status.approved {
+
+    background: #e8f5e9;
+
+    color: #1b5e20;
+
+}
+
+
+.review-status.rejected {
+
+    background: #ffebee;
+
+    color: #b71c1c;
+
+}
+
+
+/* =========================================================
+   RATING
+========================================================= */
+
+.admin-review-rating {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-top: 17px;
+
+}
+
+
+.admin-review-stars {
+
+    display: flex;
+
+    gap: 2px;
+
+    color: #C9A14A;
+
+}
+
+
+.admin-review-rating strong {
+
+    color: #7d5a17;
+
+    font-size: 13px;
+
+}
+
+
+/* =========================================================
+   DATE
+========================================================= */
+
+.admin-review-date {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    margin-top: 8px;
+
+    color: #93867b;
+
+    font-size: 12px;
+
+}
+
+
+/* =========================================================
+   COMMENT
+========================================================= */
+
+.admin-review-comment {
+
+    margin-top: 18px;
+
+    padding: 15px;
+
+    border-radius: 10px;
+
+    background: #faf7f4;
+
+}
+
+
+.admin-review-comment p {
+
+    margin: 0;
+
+    color: #4f453e;
+
+    font-size: 15px;
+
+    line-height: 1.7;
+
+}
+
+
+/* =========================================================
+   REPLY PREVIEW
+========================================================= */
+
+.admin-reply-preview {
+
+    margin-top: 16px;
+
+}
+
+
+.admin-reply-preview label,
+.admin-review-reply-box label {
+
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: #4b3020;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+}
+
+
+.existing-reply {
+
+    margin: 0;
+
+    padding: 13px;
+
+    border-left:
+        3px solid #C9A14A;
+
+    border-radius: 0 9px 9px 0;
+
+    background: #fff8e9;
+
+    color: #65584e;
+
+    font-size: 13px;
+
+    line-height: 1.6;
+
+}
+
+
+.no-reply {
+
+    margin: 0;
+
+    color: #998f87;
+
+    font-size: 13px;
+
+    font-style: italic;
+
+}
+
+
+/* =========================================================
+   REPLY BOX
+========================================================= */
+
+.admin-review-reply-box {
+
+    margin-top: 15px;
+
+}
+
+
+.review-reply-input {
+
+    width: 100%;
+
+    min-height: 90px;
+
+    padding: 11px 13px;
+
+    border: 1px solid #dcd0c5;
+
+    border-radius: 9px;
+
+    background: #fffdfb;
+
+    color: #2d211b;
+
+    font-size: 14px;
+
+    resize: vertical;
+
+    outline: none;
+
+    transition:
+        border-color .25s ease,
+        box-shadow .25s ease;
+
+}
+
+
+.review-reply-input:focus {
+
+    border-color: #e6a72c;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(230,167,44,.15);
+
+}
+
+
+.review-reply-count {
+
+    margin-top: 4px;
+
+    text-align: right;
+
+    color: #8e8177;
+
+    font-size: 11px;
+
+}
+
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+.admin-review-actions {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+    margin-top: 17px;
+
+}
+
+
+.admin-review-actions .btn {
+
+    min-height: 40px;
+
+    padding: 8px 12px;
+
+    font-size: 14px;
+
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1000px) {
+
+    .admin-reviews-grid {
+
+        grid-template-columns: 1fr;
+
+    }
+
+}
+
+
+@media (max-width: 800px) {
+
+    .reviews-summary-grid {
+
+        grid-template-columns: 1fr;
+
+    }
+
+}
+
+
+@media (max-width: 480px) {
+
+    .admin-review-card {
+
+        padding: 17px;
+
+    }
+
+    .admin-review-card-top {
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+    }
+
+    .admin-review-actions {
+
+        display: grid;
+
+        grid-template-columns:
+            1fr 1fr;
+
+    }
+
+    .admin-review-actions .btn {
+
+        width: 100%;
+
+    }
+
+}
+
+/* =========================================================
    35. RESPONSIVE - LARGE TABLET
    ========================================================= */
 
@@ -2416,3 +3026,5 @@ footer {
         flex-wrap: wrap;
     }
 }
+
+
