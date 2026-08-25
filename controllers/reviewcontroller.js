@@ -1,63 +1,95 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../config/database");
+const Review = require("../models/Review");
 
-const Review = sequelize.define(
-    "Review",
-    {
-        id: {
-            type: DataTypes.INTEGER,
-            autoIncrement: true,
-            primaryKey: true
-        },
+const createReview = async (req, res, next) => {
+    try {
+        const { name, email, rating, comment } = req.body;
 
-        name: {
-            type: DataTypes.STRING,
-            allowNull: false
-        },
-
-        email: {
-            type: DataTypes.STRING,
-            allowNull: false
-        },
-
-        rating: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-
-            validate: {
-                min: 1,
-                max: 5
-            }
-        },
-
-        comment: {
-            type: DataTypes.TEXT,
-            allowNull: false
-        },
-
-        status: {
-            type: DataTypes.ENUM(
-                "Approved",
-                "Rejected"
-            ),
-
-            allowNull: false,
-
-            // Customer le submit gareko review
-            // immediately live hunchha.
-            defaultValue: "Approved"
-        },
-
-        adminReply: {
-            type: DataTypes.TEXT,
-            allowNull: true
+        if (!name || !email || rating === undefined || !comment) {
+            return res.status(400).json({
+                message: "Name, email, rating and comment are required"
+            });
         }
-    },
 
-    {
-        tableName: "reviews",
-        timestamps: true
+        const review = await Review.create({
+            name: String(name).trim(),
+            email: String(email).trim().toLowerCase(),
+            rating,
+            comment: String(comment).trim()
+        });
+
+        return res.status(201).json(review);
+    } catch (error) {
+        next(error);
     }
-);
+};
 
-module.exports = Review;
+const getApprovedReviews = async (req, res, next) => {
+    try {
+        const reviews = await Review.findAll({
+            where: { status: "Approved" },
+            order: [["createdAt", "DESC"]]
+        });
+
+        return res.status(200).json(reviews);
+    } catch (error) {
+        next(error);
+    }
+};
+
+const getAllReviews = async (req, res, next) => {
+    try {
+        const reviews = await Review.findAll({
+            order: [["createdAt", "DESC"]]
+        });
+
+        return res.status(200).json(reviews);
+    } catch (error) {
+        next(error);
+    }
+};
+
+const updateReview = async (req, res, next) => {
+    try {
+        const review = await Review.findByPk(req.params.id);
+
+        if (!review) {
+            return res.status(404).json({ message: "Review not found" });
+        }
+
+        const { status, adminReply } = req.body;
+        if (status !== undefined) {
+            review.status = status;
+        }
+        if (adminReply !== undefined) {
+            review.adminReply = adminReply;
+        }
+
+        await review.save();
+        return res.status(200).json(review);
+    } catch (error) {
+        next(error);
+    }
+};
+
+const deleteReview = async (req, res, next) => {
+    try {
+        const review = await Review.findByPk(req.params.id);
+
+        if (!review) {
+            return res.status(404).json({ message: "Review not found" });
+        }
+
+        await review.destroy();
+        return res.status(200).json({ message: "Review deleted successfully" });
+    } catch (error) {
+        next(error);
+    }
+};
+
+module.exports = {
+    createReview,
+    getApprovedReviews,
+    getAllReviews,
+    updateReview,
+    deleteReview
+};
