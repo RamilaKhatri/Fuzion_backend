@@ -1,145 +1,368 @@
-const API_BASE = "/api/admin/stats";
-
-const statsForm = document.getElementById("statsForm");
-const statsTableBody = document.getElementById("statsTableBody");
-const logoutBtn = document.getElementById("logoutBtn");
+/* =========================================================
+   FUZION CAFE - STATISTICS ADMIN
+========================================================= */
 
 
-// ==========================================
-// GET TOKEN
-// ==========================================
+const API = "/api";
+
+
+
+/* =========================================================
+   DOM ELEMENTS
+========================================================= */
+
+const statsForm =
+    document.getElementById("statsForm");
+
+const statId =
+    document.getElementById("statId");
+
+const iconInput =
+    document.getElementById("icon");
+
+const targetValueInput =
+    document.getElementById("targetValue");
+
+const suffixInput =
+    document.getElementById("suffix");
+
+const labelInput =
+    document.getElementById("label");
+
+const orderInput =
+    document.getElementById("order");
+
+const isActiveInput =
+    document.getElementById("isActive");
+
+const tableBody =
+    document.getElementById("statsTableBody");
+
+const messageBox =
+    document.getElementById("message");
+
+const formTitle =
+    document.getElementById("formTitle");
+
+const saveBtn =
+    document.getElementById("saveBtn");
+
+const cancelBtn =
+    document.getElementById("cancelBtn");
+
+
+
+/* =========================================================
+   AUTH
+========================================================= */
 
 function getToken() {
 
-    return (
-        localStorage.getItem("token") ||
-        localStorage.getItem("adminToken")
-    );
+    return localStorage.getItem("token");
 
 }
 
 
-// ==========================================
-// API HEADERS
-// ==========================================
-
-function getHeaders() {
+function getAuthHeaders() {
 
     const token = getToken();
 
     return {
+
         "Content-Type": "application/json",
+
         "Authorization": `Bearer ${token}`
+
     };
 
 }
 
 
-// ==========================================
-// LOAD ALL STATS
-// ==========================================
+function checkLogin() {
+
+    const token = getToken();
+
+    if (!token) {
+
+        window.location.href =
+            "/login.html";
+
+        return false;
+
+    }
+
+    return true;
+
+}
+
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+function logout() {
+
+    localStorage.removeItem("token");
+
+    localStorage.removeItem("admin");
+
+    window.location.href =
+        "/login.html";
+
+}
+
+
+
+/* =========================================================
+   MESSAGE
+========================================================= */
+
+function showMessage(
+    message,
+    type = "success"
+) {
+
+    messageBox.textContent =
+        message;
+
+    messageBox.className =
+        `message ${type}`;
+
+    messageBox.style.display =
+        "block";
+
+
+    setTimeout(() => {
+
+        messageBox.style.display =
+            "none";
+
+    }, 3500);
+
+}
+
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function escapeHtml(value) {
+
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+
+/* =========================================================
+   LOAD ALL STATS
+   GET /api/admin/stats
+========================================================= */
 
 async function loadStats() {
 
+    if (!checkLogin()) {
+        return;
+    }
+
+
+    tableBody.innerHTML = `
+
+        <tr>
+
+            <td
+                colspan="9"
+                class="empty"
+            >
+                Loading statistics...
+            </td>
+
+        </tr>
+
+    `;
+
+
     try {
 
-        const response = await fetch(API_BASE, {
-            method: "GET",
-            headers: getHeaders()
-        });
+        const response =
+            await fetch(
+                `${API}/admin/stats`,
+                {
+                    method: "GET",
+                    headers:
+                        getAuthHeaders()
+                }
+            );
 
 
-        if (response.status === 401 || response.status === 403) {
+        const data =
+            await response.json();
 
-            alert("Admin access required.");
 
-            window.location.href = "login.html";
+        /* TOKEN EXPIRED */
+
+        if (
+            response.status === 401
+        ) {
+
+            localStorage.removeItem(
+                "token"
+            );
+
+            localStorage.removeItem(
+                "admin"
+            );
+
+            window.location.href =
+                "/login.html";
 
             return;
+
         }
 
 
-        const result = await response.json();
-
-
-        if (!result.success) {
+        if (!response.ok) {
 
             throw new Error(
-                result.message || "Failed to load statistics."
+                data.message ||
+                "Failed to load statistics."
             );
 
         }
 
 
-        renderStats(result.data);
+        const stats =
+            Array.isArray(data)
+                ? data
+                : data.data || [];
 
-    }
 
-    catch (error) {
+        renderStats(stats);
 
-        console.error("Load stats error:", error);
 
-        statsTableBody.innerHTML = `
+    } catch (error) {
+
+        console.error(
+            "Stats load error:",
+            error
+        );
+
+
+        tableBody.innerHTML = `
+
             <tr>
-                <td colspan="8">
+
+                <td
+                    colspan="9"
+                    class="empty"
+                >
                     Failed to load statistics.
                 </td>
+
             </tr>
+
         `;
+
+
+        showMessage(
+            error.message,
+            "error"
+        );
 
     }
 
 }
 
 
-// ==========================================
-// RENDER STATS
-// ==========================================
+
+/* =========================================================
+   RENDER STATS
+========================================================= */
 
 function renderStats(stats) {
 
-    statsTableBody.innerHTML = "";
+    tableBody.innerHTML = "";
 
 
-    if (!stats || stats.length === 0) {
+    if (!stats.length) {
 
-        statsTableBody.innerHTML = `
+        tableBody.innerHTML = `
+
             <tr>
-                <td colspan="8">
+
+                <td
+                    colspan="9"
+                    class="empty"
+                >
                     No statistics found.
                 </td>
+
             </tr>
+
         `;
 
         return;
+
     }
 
 
     stats.forEach(stat => {
 
-        const row = document.createElement("tr");
+        const tr =
+            document.createElement("tr");
 
 
-        row.innerHTML = `
+        const active =
+            stat.isActive === true;
+
+
+        tr.innerHTML = `
 
             <td>
-                ${stat.id}
+                ${escapeHtml(stat.id)}
             </td>
 
 
             <td>
 
-                <i class="${escapeHtml(stat.icon)}"></i>
-
-                <span style="margin-left:8px;">
+                <code>
                     ${escapeHtml(stat.icon)}
-                </span>
+                </code>
 
             </td>
 
 
             <td>
-                ${stat.targetValue}
+
+                <div class="stat-preview">
+
+                    <div class="stat-preview-icon">
+
+                        <i class="${escapeHtml(stat.icon)}"></i>
+
+                    </div>
+
+                    <strong>
+
+                        ${escapeHtml(stat.targetValue)}
+                        ${escapeHtml(stat.suffix || "")}
+
+                    </strong>
+
+                </div>
+
+            </td>
+
+
+            <td>
+                ${escapeHtml(stat.targetValue)}
             </td>
 
 
@@ -154,36 +377,38 @@ function renderStats(stats) {
 
 
             <td>
-                ${stat.order}
+                ${escapeHtml(stat.order)}
             </td>
 
 
             <td>
 
-                <span class="status-badge ${
-                    stat.isActive
-                        ? "status-active"
-                        : "status-inactive"
-                }">
+                ${
+                    active
 
-                    ${
-                        stat.isActive
-                            ? "Active"
-                            : "Inactive"
-                    }
+                    ? `
+                        <span class="status active">
+                            Active
+                        </span>
+                    `
 
-                </span>
+                    : `
+                        <span class="status inactive">
+                            Inactive
+                        </span>
+                    `
+                }
 
             </td>
 
 
             <td>
 
-                <div class="table-actions">
+                <div class="action-buttons">
 
                     <button
-                        class="btn btn-small btn-edit"
-                        onclick="editStat(${stat.id})"
+                        class="btn"
+                        data-edit="${stat.id}"
                     >
                         <i class="fa-solid fa-pen"></i>
                         Edit
@@ -191,8 +416,8 @@ function renderStats(stats) {
 
 
                     <button
-                        class="btn btn-small btn-delete"
-                        onclick="deleteStat(${stat.id})"
+                        class="btn secondary"
+                        data-delete="${stat.id}"
                     >
                         <i class="fa-solid fa-trash"></i>
                         Delete
@@ -205,314 +430,500 @@ function renderStats(stats) {
         `;
 
 
-        statsTableBody.appendChild(row);
+        tableBody.appendChild(tr);
 
     });
+
+
+
+    /* EDIT BUTTONS */
+
+    document
+        .querySelectorAll("[data-edit]")
+        .forEach(button => {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    editStat(
+                        button.dataset.edit
+                    );
+
+                }
+            );
+
+        });
+
+
+
+    /* DELETE BUTTONS */
+
+    document
+        .querySelectorAll("[data-delete]")
+        .forEach(button => {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    deleteStat(
+                        button.dataset.delete
+                    );
+
+                }
+            );
+
+        });
 
 }
 
 
-// ==========================================
-// ADD STAT
-// ==========================================
 
-statsForm.addEventListener("submit", async function (event) {
+/* =========================================================
+   CREATE / UPDATE
+========================================================= */
 
-    event.preventDefault();
+statsForm.addEventListener(
+    "submit",
+    async function (event) {
 
-
-    const icon =
-        document.getElementById("icon").value.trim();
-
-    const targetValue =
-        Number(document.getElementById("targetValue").value);
-
-    const suffix =
-        document.getElementById("suffix").value.trim();
-
-    const label =
-        document.getElementById("label").value.trim();
-
-    const order =
-        Number(document.getElementById("order").value);
-
-    const isActive =
-        document.getElementById("isActive").value === "true";
+        event.preventDefault();
 
 
-    if (!icon || !label || Number.isNaN(targetValue)) {
+        if (!checkLogin()) {
+            return;
+        }
 
-        alert("Please fill all required fields.");
 
+        const id =
+            statId.value.trim();
+
+
+        const payload = {
+
+            icon:
+                iconInput.value.trim(),
+
+            targetValue:
+                Number(
+                    targetValueInput.value
+                ),
+
+            suffix:
+                suffixInput.value.trim() || "+",
+
+            label:
+                labelInput.value.trim(),
+
+            order:
+                Number(
+                    orderInput.value
+                ) || 0,
+
+            isActive:
+                isActiveInput.value === "true"
+
+        };
+
+
+        if (
+            !payload.icon ||
+            payload.targetValue === "" ||
+            !payload.label
+        ) {
+
+            showMessage(
+                "Please fill all required fields.",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        try {
+
+            saveBtn.disabled = true;
+
+
+            const url =
+                id
+                    ? `${API}/admin/stats/${id}`
+                    : `${API}/admin/stats`;
+
+
+            const method =
+                id
+                    ? "PUT"
+                    : "POST";
+
+
+            const response =
+                await fetch(
+                    url,
+                    {
+                        method,
+                        headers:
+                            getAuthHeaders(),
+                        body:
+                            JSON.stringify(payload)
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (
+                response.status === 401
+            ) {
+
+                localStorage.removeItem(
+                    "token"
+                );
+
+                localStorage.removeItem(
+                    "admin"
+                );
+
+                window.location.href =
+                    "/login.html";
+
+                return;
+
+            }
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    data.message ||
+                    "Failed to save statistic."
+                );
+
+            }
+
+
+            showMessage(
+
+                id
+                    ? "Statistic updated successfully."
+                    : "Statistic created successfully."
+
+            );
+
+
+            resetForm();
+
+            loadStats();
+
+
+        } catch (error) {
+
+            console.error(
+                "Save stat error:",
+                error
+            );
+
+
+            showMessage(
+                error.message,
+                "error"
+            );
+
+
+        } finally {
+
+            saveBtn.disabled =
+                false;
+
+        }
+
+    }
+);
+
+
+
+/* =========================================================
+   EDIT STAT
+========================================================= */
+
+async function editStat(id) {
+
+    if (!checkLogin()) {
         return;
     }
 
 
     try {
 
-        const response = await fetch(API_BASE, {
+        const response =
+            await fetch(
+                `${API}/admin/stats`,
+                {
+                    method: "GET",
+                    headers:
+                        getAuthHeaders()
+                }
+            );
 
-            method: "POST",
 
-            headers: getHeaders(),
+        const data =
+            await response.json();
 
-            body: JSON.stringify({
 
-                icon,
-                targetValue,
-                suffix,
-                label,
-                order,
-                isActive
+        if (!response.ok) {
 
-            })
+            throw new Error(
+                data.message ||
+                "Failed to fetch statistic."
+            );
+
+        }
+
+
+        const stats =
+            Array.isArray(data)
+                ? data
+                : data.data || [];
+
+
+        const stat =
+            stats.find(
+                item =>
+                    String(item.id) ===
+                    String(id)
+            );
+
+
+        if (!stat) {
+
+            throw new Error(
+                "Statistic not found."
+            );
+
+        }
+
+
+        statId.value =
+            stat.id;
+
+        iconInput.value =
+            stat.icon || "";
+
+        targetValueInput.value =
+            stat.targetValue ?? "";
+
+        suffixInput.value =
+            stat.suffix ?? "+";
+
+        labelInput.value =
+            stat.label || "";
+
+        orderInput.value =
+            stat.order ?? 0;
+
+        isActiveInput.value =
+            stat.isActive
+                ? "true"
+                : "false";
+
+
+        formTitle.textContent =
+            "Edit Statistics";
+
+        saveBtn.innerHTML =
+            `
+            <i class="fa-solid fa-floppy-disk"></i>
+            Update Statistics
+            `;
+
+
+        window.scrollTo({
+
+            top: 0,
+
+            behavior: "smooth"
 
         });
 
 
-        const result = await response.json();
+    } catch (error) {
 
-
-        if (!response.ok) {
-
-            throw new Error(
-                result.message || "Failed to create statistic."
-            );
-
-        }
-
-
-        alert("Statistic added successfully.");
-
-
-        statsForm.reset();
-
-
-        document.getElementById("suffix").value = "+";
-
-        document.getElementById("order").value = "0";
-
-        document.getElementById("isActive").value = "true";
-
-
-        loadStats();
-
-    }
-
-    catch (error) {
-
-        console.error("Create stat error:", error);
-
-        alert(error.message);
-
-    }
-
-});
-
-
-// ==========================================
-// EDIT STAT
-// ==========================================
-
-async function editStat(id) {
-
-    const icon =
-        prompt("Enter Font Awesome icon class:");
-
-    if (icon === null) return;
-
-
-    const targetValue =
-        prompt("Enter target value:");
-
-    if (targetValue === null) return;
-
-
-    const suffix =
-        prompt("Enter suffix:", "+");
-
-    if (suffix === null) return;
-
-
-    const label =
-        prompt("Enter label:");
-
-    if (label === null) return;
-
-
-    const order =
-        prompt("Enter display order:", "0");
-
-    if (order === null) return;
-
-
-    const active =
-        confirm(
-            "Press OK for Active.\nPress Cancel for Inactive."
+        console.error(
+            "Edit stat error:",
+            error
         );
 
 
-    try {
-
-        const response = await fetch(
-            `${API_BASE}/${id}`,
-            {
-
-                method: "PUT",
-
-                headers: getHeaders(),
-
-                body: JSON.stringify({
-
-                    icon: icon.trim(),
-
-                    targetValue:
-                        Number(targetValue),
-
-                    suffix: suffix.trim(),
-
-                    label: label.trim(),
-
-                    order:
-                        Number(order),
-
-                    isActive:
-                        active
-
-                })
-
-            }
+        showMessage(
+            error.message,
+            "error"
         );
-
-
-        const result = await response.json();
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                result.message || "Failed to update statistic."
-            );
-
-        }
-
-
-        alert("Statistic updated successfully.");
-
-        loadStats();
-
-    }
-
-    catch (error) {
-
-        console.error("Update stat error:", error);
-
-        alert(error.message);
 
     }
 
 }
 
 
-// ==========================================
-// DELETE STAT
-// ==========================================
+
+/* =========================================================
+   DELETE STAT
+========================================================= */
 
 async function deleteStat(id) {
 
-    const confirmed = confirm(
-        "Are you sure you want to delete this statistic?"
-    );
+    if (!checkLogin()) {
+        return;
+    }
 
 
-    if (!confirmed) return;
+    const confirmed =
+        confirm(
+            "Are you sure you want to delete this statistic?"
+        );
+
+
+    if (!confirmed) {
+        return;
+    }
 
 
     try {
 
-        const response = await fetch(
-            `${API_BASE}/${id}`,
-            {
+        const response =
+            await fetch(
+                `${API}/admin/stats/${id}`,
+                {
+                    method: "DELETE",
+                    headers:
+                        getAuthHeaders()
+                }
+            );
 
-                method: "DELETE",
 
-                headers: getHeaders()
-
-            }
-        );
+        const data =
+            await response.json();
 
 
-        const result = await response.json();
+        if (
+            response.status === 401
+        ) {
+
+            localStorage.removeItem(
+                "token"
+            );
+
+            localStorage.removeItem(
+                "admin"
+            );
+
+            window.location.href =
+                "/login.html";
+
+            return;
+
+        }
 
 
         if (!response.ok) {
 
             throw new Error(
-                result.message || "Failed to delete statistic."
+                data.message ||
+                "Failed to delete statistic."
             );
 
         }
 
 
-        alert("Statistic deleted successfully.");
+        showMessage(
+            "Statistic deleted successfully."
+        );
+
 
         loadStats();
 
+
+    } catch (error) {
+
+        console.error(
+            "Delete stat error:",
+            error
+        );
+
+
+        showMessage(
+            error.message,
+            "error"
+        );
+
     }
 
-    catch (error) {
+}
 
-        console.error("Delete stat error:", error);
 
-        alert(error.message);
+
+/* =========================================================
+   RESET FORM
+========================================================= */
+
+function resetForm() {
+
+    statsForm.reset();
+
+    statId.value = "";
+
+    suffixInput.value =
+        "+";
+
+    orderInput.value =
+        "0";
+
+    isActiveInput.value =
+        "true";
+
+
+    formTitle.textContent =
+        "Add Statistics";
+
+
+    saveBtn.innerHTML =
+        `
+        <i class="fa-solid fa-floppy-disk"></i>
+        Save Statistics
+        `;
+
+}
+
+
+
+/* =========================================================
+   CANCEL EDIT
+========================================================= */
+
+cancelBtn.addEventListener(
+    "click",
+    resetForm
+);
+
+
+
+/* =========================================================
+   INITIAL LOAD
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        if (checkLogin()) {
+
+            loadStats();
+
+        }
 
     }
-
-}
-
-
-// ==========================================
-// LOGOUT
-// ==========================================
-
-if (logoutBtn) {
-
-    logoutBtn.addEventListener("click", function () {
-
-        localStorage.removeItem("token");
-
-        localStorage.removeItem("adminToken");
-
-        window.location.href = "login.html";
-
-    });
-
-}
-
-
-// ==========================================
-// BASIC HTML ESCAPE
-// ==========================================
-
-function escapeHtml(value) {
-
-    return String(value)
-
-        .replace(/&/g, "&amp;")
-
-        .replace(/</g, "&lt;")
-
-        .replace(/>/g, "&gt;")
-
-        .replace(/"/g, "&quot;")
-
-        .replace(/'/g, "&#039;");
-
-}
-
-
-// ==========================================
-// INITIAL LOAD
-// ==========================================
-
-loadStats();
+);

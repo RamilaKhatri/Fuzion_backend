@@ -1,75 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Cafe Statistics | Admin Panel</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <link rel="stylesheet" href="css/admin.css">
-    <link rel="stylesheet" href="css/responsive.css">
+    <title>Fuzion Café - Statistics</title>
 
+    <!-- Font Awesome -->
     <link
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
     >
+
+    <!-- MASTER ADMIN CSS -->
+    <link rel="stylesheet" href="admin.css">
+
 </head>
+
 
 <body>
 
 <div class="layout">
 
-    <!-- ==========================================
+    <!-- =====================================================
          SIDEBAR
-    ========================================== -->
+    ====================================================== -->
 
     <aside class="sidebar">
 
-        <div class="sidebar-logo">
-            <img src="../assets/images/logo.png" alt="Fuzion Cafe">
-            <h2>Fuzion Cafe</h2>
+        <div class="brand">
+
+            <span>FUZION</span>
+
+            <small>CAFÉ ADMIN</small>
+
         </div>
+
 
         <nav class="sidebar-nav">
 
-            <a href="dashboard.html">
+            <a href="/dashboard.html">
                 <i class="fa-solid fa-chart-line"></i>
                 <span>Dashboard</span>
             </a>
 
-            <a href="menu.html">
+
+            <a href="/projects.html">
+                <i class="fa-solid fa-folder-open"></i>
+                <span>Projects</span>
+            </a>
+
+
+            <a href="/menu.html">
                 <i class="fa-solid fa-utensils"></i>
                 <span>Menu</span>
             </a>
 
-            <a href="gallery.html">
+
+            <a href="/users.html">
+                <i class="fa-solid fa-users"></i>
+                <span>Users</span>
+            </a>
+
+
+            <a href="/bookings.html">
+                <i class="fa-solid fa-calendar-check"></i>
+                <span>Bookings</span>
+            </a>
+
+
+            <a href="/enquiries.html">
+                <i class="fa-solid fa-envelope"></i>
+                <span>Enquiries</span>
+            </a>
+
+
+            <a href="/reviews.html">
+                <i class="fa-solid fa-star"></i>
+                <span>Reviews</span>
+            </a>
+
+
+            <a href="/newsletter.html">
+                <i class="fa-solid fa-envelope-open-text"></i>
+                <span>Newsletter</span>
+            </a>
+
+
+            <a href="/orders.html">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span>Orders</span>
+            </a>
+
+
+            <a href="/gallery.html">
                 <i class="fa-solid fa-images"></i>
                 <span>Gallery</span>
             </a>
 
-            <a href="contact.html">
-                <i class="fa-solid fa-envelope"></i>
-                <span>Contact</span>
-            </a>
 
-            <a href="newsletter.html">
-                <i class="fa-solid fa-newspaper"></i>
-                <span>Newsletter</span>
-            </a>
-
-            <!-- ACTIVE -->
-            <a href="stats.html" class="active">
+            <!-- ACTIVE STATS -->
+            <a
+                href="/stats.html"
+                class="active"
+            >
                 <i class="fa-solid fa-chart-simple"></i>
-                <span>Cafe Stats</span>
+                <span>Statistics</span>
+            </a>
+
+
+            <a href="/team.html">
+                <i class="fa-solid fa-user-group"></i>
+                <span>Team</span>
+            </a>
+
+
+            <a href="/profile.html">
+                <i class="fa-solid fa-user-gear"></i>
+                <span>Profile</span>
             </a>
 
         </nav>
 
+
+        <!-- SIDEBAR BOTTOM -->
+
         <div class="sidebar-bottom">
 
-            <button id="logoutBtn">
+            <button
+                class="logout"
+                type="button"
+                onclick="logout()"
+            >
+
                 <i class="fa-solid fa-right-from-bracket"></i>
+
                 <span>Logout</span>
+
             </button>
 
         </div>
@@ -77,9 +150,10 @@
     </aside>
 
 
-    <!-- ==========================================
+
+    <!-- =====================================================
          MAIN CONTENT
-    ========================================== -->
+    ====================================================== -->
 
     <main class="main">
 
@@ -88,24 +162,52 @@
         <div class="topbar">
 
             <div>
-                <h1>Cafe Statistics</h1>
-                <p>Manage the statistics displayed on the homepage.</p>
+
+                <h1>
+                    Café Statistics
+                </h1>
+
+                <p>
+                    Manage the statistics displayed
+                    on the Fuzion Café homepage.
+                </p>
+
             </div>
 
         </div>
 
 
-        <!-- ==========================================
-             ADD STAT
-        ========================================== -->
 
-        <section class="dashboard-panel">
+        <!-- =================================================
+             MESSAGE
+        ================================================== -->
 
-            <div class="panel-header">
+        <div
+            id="message"
+            class="message"
+            style="display:none;"
+        ></div>
+
+
+
+        <!-- =================================================
+             ADD / EDIT FORM
+        ================================================== -->
+
+        <section class="admin-card">
+
+            <div class="admin-card-header">
 
                 <div>
-                    <h2>Add New Statistic</h2>
-                    <p>Create a statistic for the homepage.</p>
+
+                    <h2 id="formTitle">
+                        Add Statistics
+                    </h2>
+
+                    <p>
+                        Add or update homepage statistics.
+                    </p>
+
                 </div>
 
             </div>
@@ -113,11 +215,18 @@
 
             <form id="statsForm">
 
+                <input
+                    type="hidden"
+                    id="statId"
+                >
+
+
                 <div class="form-grid">
+
 
                     <!-- ICON -->
 
-                    <div class="field">
+                    <div class="form-group">
 
                         <label for="icon">
                             Icon
@@ -131,15 +240,17 @@
                         >
 
                         <small>
-                            Example: fa-solid fa-calendar-days
+                            Example:
+                            fa-solid fa-calendar-days
                         </small>
 
                     </div>
 
 
+
                     <!-- TARGET -->
 
-                    <div class="field">
+                    <div class="form-group">
 
                         <label for="targetValue">
                             Target Value
@@ -156,9 +267,10 @@
                     </div>
 
 
+
                     <!-- SUFFIX -->
 
-                    <div class="field">
+                    <div class="form-group">
 
                         <label for="suffix">
                             Suffix
@@ -167,16 +279,17 @@
                         <input
                             type="text"
                             id="suffix"
-                            value="+"
                             placeholder="+"
+                            value="+"
                         >
 
                     </div>
 
 
+
                     <!-- LABEL -->
 
-                    <div class="field">
+                    <div class="form-group">
 
                         <label for="label">
                             Label
@@ -192,9 +305,10 @@
                     </div>
 
 
+
                     <!-- ORDER -->
 
-                    <div class="field">
+                    <div class="form-group">
 
                         <label for="order">
                             Display Order
@@ -203,6 +317,7 @@
                         <input
                             type="number"
                             id="order"
+                            placeholder="1"
                             value="0"
                             min="0"
                         >
@@ -210,9 +325,10 @@
                     </div>
 
 
+
                     <!-- ACTIVE -->
 
-                    <div class="field">
+                    <div class="form-group">
 
                         <label for="isActive">
                             Status
@@ -235,14 +351,27 @@
                 </div>
 
 
+
+                <!-- BUTTONS -->
+
                 <div class="form-actions">
 
                     <button
                         type="submit"
-                        class="btn btn-primary"
+                        class="btn"
+                        id="saveBtn"
                     >
-                        <i class="fa-solid fa-plus"></i>
-                        Add Statistic
+                        <i class="fa-solid fa-floppy-disk"></i>
+                        Save Statistics
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="btn secondary"
+                        id="cancelBtn"
+                    >
+                        Cancel
                     </button>
 
                 </div>
@@ -252,20 +381,39 @@
         </section>
 
 
-        <!-- ==========================================
-             EXISTING STATS
-        ========================================== -->
 
-        <section class="dashboard-panel">
+        <!-- =================================================
+             STATISTICS TABLE
+        ================================================== -->
 
-            <div class="panel-header">
+        <section class="admin-card">
+
+            <div class="admin-card-header">
 
                 <div>
-                    <h2>Homepage Statistics</h2>
-                    <p>Update or remove your cafe statistics.</p>
+
+                    <h2>
+                        Homepage Statistics
+                    </h2>
+
+                    <p>
+                        These values are displayed
+                        in the homepage statistics section.
+                    </p>
+
                 </div>
 
+                <button
+                    type="button"
+                    class="btn"
+                    onclick="loadStats()"
+                >
+                    <i class="fa-solid fa-rotate"></i>
+                    Refresh
+                </button>
+
             </div>
+
 
 
             <div class="table-wrapper">
@@ -280,7 +428,9 @@
 
                             <th>Icon</th>
 
-                            <th>Value</th>
+                            <th>Preview</th>
+
+                            <th>Target</th>
 
                             <th>Suffix</th>
 
@@ -301,7 +451,10 @@
 
                         <tr>
 
-                            <td colspan="8">
+                            <td
+                                colspan="9"
+                                class="empty"
+                            >
                                 Loading statistics...
                             </td>
 
@@ -320,11 +473,12 @@
 </div>
 
 
-<!-- ==========================================
+<!-- =====================================================
      JAVASCRIPT
-========================================== -->
+====================================================== -->
 
 <script src="stats.js"></script>
 
 </body>
+
 </html>
