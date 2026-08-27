@@ -163,7 +163,7 @@ function escapeHtml(value) {
 
 /* =========================================================
    LOAD ALL STATS
-   GET /api/admin/stats
+    GET /api/stats/admin
 ========================================================= */
 
 async function loadStats() {
@@ -193,7 +193,7 @@ async function loadStats() {
 
         const response =
             await fetch(
-                `${API}/admin/stats`,
+                `${API}/stats/admin`,
                 {
                     method: "GET",
                     headers:
@@ -550,8 +550,8 @@ statsForm.addEventListener(
 
             const url =
                 id
-                    ? `${API}/admin/stats/${id}`
-                    : `${API}/admin/stats`;
+                    ? `${API}/stats/admin/${id}`
+                    : `${API}/stats/admin`;
 
 
             const method =
@@ -662,7 +662,7 @@ async function editStat(id) {
 
         const response =
             await fetch(
-                `${API}/admin/stats`,
+                `${API}/stats/admin`,
                 {
                     method: "GET",
                     headers:
@@ -796,7 +796,7 @@ async function deleteStat(id) {
 
         const response =
             await fetch(
-                `${API}/admin/stats/${id}`,
+                `${API}/stats/admin/${id}`,
                 {
                     method: "DELETE",
                     headers:
