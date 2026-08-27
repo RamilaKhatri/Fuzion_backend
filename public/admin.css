@@ -3027,4 +3027,783 @@ footer {
     }
 }
 
+/* ==========================================
+   CAFE STATS ADMIN PAGE
+========================================== */
 
+* {
+    box-sizing: border-box;
+}
+
+
+/* ==========================================
+   PAGE
+========================================== */
+
+body {
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    background: #f7f3ec;
+    color: #1A1410;
+}
+
+
+/* ==========================================
+   MAIN LAYOUT
+========================================== */
+
+.layout {
+    min-height: 100vh;
+    display: flex;
+}
+
+
+/* ==========================================
+   SIDEBAR
+========================================== */
+
+.sidebar {
+    width: 250px;
+    min-height: 100vh;
+
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+
+    background: #5e1712;
+    color: #ffffff;
+
+    display: flex;
+    flex-direction: column;
+
+    z-index: 1000;
+}
+
+
+/* ==========================================
+   SIDEBAR LOGO
+========================================== */
+
+.sidebar-logo {
+    height: 100px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 10px 22px;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.sidebar-logo img {
+    width: 62px;
+    height: 62px;
+
+    object-fit: contain;
+}
+
+.sidebar-logo h2 {
+    margin: 0;
+
+    font-family: "Playfair Display", serif;
+    font-size: 20px;
+    color: #f6d3a5;
+}
+
+
+/* ==========================================
+   SIDEBAR NAVIGATION
+========================================== */
+
+.sidebar-nav {
+    padding: 25px 15px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+
+.sidebar-nav a {
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+
+    padding: 13px 16px;
+
+    border-radius: 8px;
+
+    color: #ffffff;
+
+    font-size: 15px;
+    font-weight: 500;
+
+    text-decoration: none;
+
+    transition:
+        background 0.25s ease,
+        color 0.25s ease,
+        transform 0.25s ease;
+}
+
+
+.sidebar-nav a i {
+    width: 20px;
+
+    text-align: center;
+
+    font-size: 16px;
+}
+
+
+.sidebar-nav a:hover {
+    background: rgba(255, 217, 106, 0.15);
+
+    color: #ffd96a;
+
+    transform: translateX(3px);
+}
+
+
+/* ACTIVE SIDEBAR ITEM */
+
+.sidebar-nav a.active {
+    background: #f5c04a;
+
+    color: #5e1712;
+
+    font-weight: 600;
+}
+
+
+.sidebar-nav a.active:hover {
+    background: #ffd96a;
+
+    color: #5e1712;
+
+    transform: none;
+}
+
+
+/* ==========================================
+   SIDEBAR BOTTOM
+========================================== */
+
+.sidebar-bottom {
+    margin-top: auto;
+
+    padding: 20px 15px;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+
+.sidebar-bottom button {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+
+    padding: 13px 16px;
+
+    border-radius: 8px;
+
+    background: transparent;
+
+    color: #ffffff;
+
+    font-family: "Poppins", sans-serif;
+
+    font-size: 15px;
+    font-weight: 500;
+
+    text-align: left;
+
+    transition: 0.25s ease;
+}
+
+
+.sidebar-bottom button:hover {
+    background: rgba(255, 255, 255, 0.1);
+
+    color: #ffd96a;
+}
+
+
+/* ==========================================
+   MAIN CONTENT
+========================================== */
+
+.main {
+    width: calc(100% - 250px);
+
+    margin-left: 250px;
+
+    min-height: 100vh;
+
+    padding: 35px 45px;
+}
+
+
+/* ==========================================
+   TOPBAR
+========================================== */
+
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 35px;
+}
+
+
+.topbar h1 {
+    margin: 0 0 7px;
+
+    font-family: "Playfair Display", serif;
+
+    font-size: 38px;
+
+    font-weight: 700;
+
+    color: #1A1410;
+}
+
+
+.topbar p {
+    margin: 0;
+
+    color: #746b63;
+
+    font-size: 15px;
+}
+
+
+/* ==========================================
+   DASHBOARD PANEL
+========================================== */
+
+.dashboard-panel {
+    background: #ffffff;
+
+    border-radius: 14px;
+
+    padding: 28px;
+
+    margin-bottom: 30px;
+
+    border: 1px solid rgba(94, 23, 18, 0.08);
+
+    box-shadow:
+        0 5px 20px rgba(60, 40, 20, 0.06);
+}
+
+
+/* ==========================================
+   PANEL HEADER
+========================================== */
+
+.panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 25px;
+
+    padding-bottom: 18px;
+
+    border-bottom: 1px solid #eee5d8;
+}
+
+
+.panel-header h2 {
+    margin: 0 0 5px;
+
+    font-family: "Playfair Display", serif;
+
+    font-size: 25px;
+
+    color: #1A1410;
+}
+
+
+.panel-header p {
+    margin: 0;
+
+    color: #7b7066;
+
+    font-size: 14px;
+}
+
+
+/* ==========================================
+   FORM GRID
+========================================== */
+
+.form-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 22px;
+}
+
+
+/* ==========================================
+   FORM FIELD
+========================================== */
+
+.field {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+
+.field label {
+    color: #3b3028;
+
+    font-size: 14px;
+
+    font-weight: 600;
+}
+
+
+.field small {
+    color: #8c8176;
+
+    font-size: 12px;
+}
+
+
+/* ==========================================
+   INPUTS
+========================================== */
+
+.field input,
+.field select {
+    width: 100%;
+
+    height: 46px;
+
+    padding: 0 14px;
+
+    border: 1px solid #ddd1c1;
+
+    border-radius: 8px;
+
+    background: #fffdf9;
+
+    color: #1A1410;
+
+    font-family: "Poppins", sans-serif;
+
+    font-size: 14px;
+
+    outline: none;
+
+    transition:
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+
+.field input:focus,
+.field select:focus {
+    border-color: #bd7c13;
+
+    box-shadow:
+        0 0 0 3px rgba(189, 124, 19, 0.12);
+}
+
+
+.field input::placeholder {
+    color: #a59b91;
+}
+
+
+/* ==========================================
+   FORM ACTIONS
+========================================== */
+
+.form-actions {
+    margin-top: 25px;
+
+    display: flex;
+    justify-content: flex-end;
+}
+
+
+.btn {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    padding: 11px 20px;
+
+    font-family: "Poppins", sans-serif;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.25s ease,
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+
+.btn-primary {
+    background: #bd7c13;
+
+    color: #ffffff;
+}
+
+
+.btn-primary:hover {
+    background: #a9690d;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 5px 12px rgba(101, 15, 13, 0.18);
+}
+
+
+/* ==========================================
+   TABLE WRAPPER
+========================================== */
+
+.table-wrapper {
+    width: 100%;
+
+    overflow-x: auto;
+}
+
+
+/* ==========================================
+   TABLE
+========================================== */
+
+table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    min-width: 850px;
+}
+
+
+table thead {
+    background: #f7f0e6;
+}
+
+
+table th {
+    padding: 14px 12px;
+
+    text-align: left;
+
+    color: #5e1712;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    white-space: nowrap;
+
+    border-bottom: 1px solid #e5d9c9;
+}
+
+
+table td {
+    padding: 15px 12px;
+
+    color: #4b423b;
+
+    font-size: 13px;
+
+    border-bottom: 1px solid #eee7df;
+
+    vertical-align: middle;
+}
+
+
+table tbody tr {
+    transition: background 0.2s ease;
+}
+
+
+table tbody tr:hover {
+    background: #fffaf3;
+}
+
+
+/* ==========================================
+   FONT AWESOME ICON IN TABLE
+========================================== */
+
+table td i {
+    color: #bb842c;
+
+    font-size: 18px;
+}
+
+
+/* ==========================================
+   STATUS BADGE
+========================================== */
+
+.status-badge {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 5px 11px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+
+.status-active {
+    background: #e8f5e9;
+
+    color: #287b31;
+}
+
+
+.status-inactive {
+    background: #f5e8e6;
+
+    color: #8a3027;
+}
+
+
+/* ==========================================
+   TABLE ACTIONS
+========================================== */
+
+.table-actions {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+}
+
+
+.btn-small {
+    padding: 7px 11px;
+
+    border-radius: 6px;
+
+    font-size: 12px;
+}
+
+
+.btn-edit {
+    background: #fff3d6;
+
+    color: #8a5a05;
+}
+
+
+.btn-edit:hover {
+    background: #f5d98a;
+
+    color: #5e1712;
+}
+
+
+.btn-delete {
+    background: #f8e5e2;
+
+    color: #8b2e25;
+}
+
+
+.btn-delete:hover {
+    background: #e8c2bd;
+
+    color: #65140f;
+}
+
+
+/* ==========================================
+   RESPONSIVE — TABLET
+========================================== */
+
+@media (max-width: 1100px) {
+
+    .sidebar {
+        width: 220px;
+    }
+
+    .main {
+        width: calc(100% - 220px);
+
+        margin-left: 220px;
+
+        padding: 30px;
+    }
+
+    .form-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+}
+
+
+/* ==========================================
+   RESPONSIVE — SMALL TABLET
+========================================== */
+
+@media (max-width: 800px) {
+
+    .sidebar {
+        width: 75px;
+    }
+
+    .sidebar-logo {
+        justify-content: center;
+
+        padding: 10px;
+    }
+
+    .sidebar-logo img {
+        width: 50px;
+        height: 50px;
+    }
+
+    .sidebar-logo h2 {
+        display: none;
+    }
+
+    .sidebar-nav {
+        padding: 20px 10px;
+    }
+
+    .sidebar-nav a {
+        justify-content: center;
+
+        padding: 13px 10px;
+    }
+
+    .sidebar-nav a span {
+        display: none;
+    }
+
+    .sidebar-bottom {
+        padding: 15px 10px;
+    }
+
+    .sidebar-bottom button {
+        justify-content: center;
+
+        padding: 13px 10px;
+    }
+
+    .sidebar-bottom button span {
+        display: none;
+    }
+
+    .main {
+        width: calc(100% - 75px);
+
+        margin-left: 75px;
+
+        padding: 25px;
+    }
+
+    .topbar h1 {
+        font-size: 32px;
+    }
+
+}
+
+
+/* ==========================================
+   RESPONSIVE — MOBILE
+========================================== */
+
+@media (max-width: 600px) {
+
+    .main {
+        padding: 20px 15px;
+    }
+
+    .topbar {
+        margin-bottom: 25px;
+    }
+
+    .topbar h1 {
+        font-size: 28px;
+    }
+
+    .topbar p {
+        font-size: 13px;
+    }
+
+    .dashboard-panel {
+        padding: 20px;
+
+        border-radius: 10px;
+    }
+
+    .panel-header h2 {
+        font-size: 21px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+
+        gap: 18px;
+    }
+
+    .form-actions {
+        justify-content: stretch;
+    }
+
+    .form-actions .btn {
+        width: 100%;
+    }
+
+    .sidebar {
+        width: 65px;
+    }
+
+    .main {
+        width: calc(100% - 65px);
+
+        margin-left: 65px;
+    }
+
+}

@@ -101,6 +101,9 @@ const galleryRoutes =
 const newsletterRoutes =
     require("./routes/newsletterRoutes");
 
+const statsRoutes = 
+    require("./routes/statsRoutes");
+
 
 const reviewRoutes =
     require("./routes/reviewRoutes");
@@ -274,6 +277,10 @@ app.use(
     newsletterRoutes
 );
 
+app.use(
+    "/api/stats",
+     statsRoutes
+    );
 
 app.use(
     "/api/reviews",

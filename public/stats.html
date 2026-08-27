@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Cafe Statistics | Admin Panel</title>
+
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="css/responsive.css">
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    >
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- ==========================================
+         SIDEBAR
+    ========================================== -->
+
+    <aside class="sidebar">
+
+        <div class="sidebar-logo">
+            <img src="../assets/images/logo.png" alt="Fuzion Cafe">
+            <h2>Fuzion Cafe</h2>
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <a href="dashboard.html">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="menu.html">
+                <i class="fa-solid fa-utensils"></i>
+                <span>Menu</span>
+            </a>
+
+            <a href="gallery.html">
+                <i class="fa-solid fa-images"></i>
+                <span>Gallery</span>
+            </a>
+
+            <a href="contact.html">
+                <i class="fa-solid fa-envelope"></i>
+                <span>Contact</span>
+            </a>
+
+            <a href="newsletter.html">
+                <i class="fa-solid fa-newspaper"></i>
+                <span>Newsletter</span>
+            </a>
+
+            <!-- ACTIVE -->
+            <a href="stats.html" class="active">
+                <i class="fa-solid fa-chart-simple"></i>
+                <span>Cafe Stats</span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <button id="logoutBtn">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- ==========================================
+         MAIN CONTENT
+    ========================================== -->
+
+    <main class="main">
+
+        <!-- TOPBAR -->
+
+        <div class="topbar">
+
+            <div>
+                <h1>Cafe Statistics</h1>
+                <p>Manage the statistics displayed on the homepage.</p>
+            </div>
+
+        </div>
+
+
+        <!-- ==========================================
+             ADD STAT
+        ========================================== -->
+
+        <section class="dashboard-panel">
+
+            <div class="panel-header">
+
+                <div>
+                    <h2>Add New Statistic</h2>
+                    <p>Create a statistic for the homepage.</p>
+                </div>
+
+            </div>
+
+
+            <form id="statsForm">
+
+                <div class="form-grid">
+
+                    <!-- ICON -->
+
+                    <div class="field">
+
+                        <label for="icon">
+                            Icon
+                        </label>
+
+                        <input
+                            type="text"
+                            id="icon"
+                            placeholder="fa-solid fa-users"
+                            required
+                        >
+
+                        <small>
+                            Example: fa-solid fa-calendar-days
+                        </small>
+
+                    </div>
+
+
+                    <!-- TARGET -->
+
+                    <div class="field">
+
+                        <label for="targetValue">
+                            Target Value
+                        </label>
+
+                        <input
+                            type="number"
+                            id="targetValue"
+                            placeholder="10000"
+                            min="0"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- SUFFIX -->
+
+                    <div class="field">
+
+                        <label for="suffix">
+                            Suffix
+                        </label>
+
+                        <input
+                            type="text"
+                            id="suffix"
+                            value="+"
+                            placeholder="+"
+                        >
+
+                    </div>
+
+
+                    <!-- LABEL -->
+
+                    <div class="field">
+
+                        <label for="label">
+                            Label
+                        </label>
+
+                        <input
+                            type="text"
+                            id="label"
+                            placeholder="Happy Customers"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- ORDER -->
+
+                    <div class="field">
+
+                        <label for="order">
+                            Display Order
+                        </label>
+
+                        <input
+                            type="number"
+                            id="order"
+                            value="0"
+                            min="0"
+                        >
+
+                    </div>
+
+
+                    <!-- ACTIVE -->
+
+                    <div class="field">
+
+                        <label for="isActive">
+                            Status
+                        </label>
+
+                        <select id="isActive">
+
+                            <option value="true">
+                                Active
+                            </option>
+
+                            <option value="false">
+                                Inactive
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-actions">
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
+                        <i class="fa-solid fa-plus"></i>
+                        Add Statistic
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+
+        <!-- ==========================================
+             EXISTING STATS
+        ========================================== -->
+
+        <section class="dashboard-panel">
+
+            <div class="panel-header">
+
+                <div>
+                    <h2>Homepage Statistics</h2>
+                    <p>Update or remove your cafe statistics.</p>
+                </div>
+
+            </div>
+
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>ID</th>
+
+                            <th>Icon</th>
+
+                            <th>Value</th>
+
+                            <th>Suffix</th>
+
+                            <th>Label</th>
+
+                            <th>Order</th>
+
+                            <th>Status</th>
+
+                            <th>Actions</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="statsTableBody">
+
+                        <tr>
+
+                            <td colspan="8">
+                                Loading statistics...
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- ==========================================
+     JAVASCRIPT
+========================================== -->
+
+<script src="stats.js"></script>
+
+</body>
+</html>
