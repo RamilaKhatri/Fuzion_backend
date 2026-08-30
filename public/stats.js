@@ -2,54 +2,94 @@
    FUZION CAFE - STATISTICS ADMIN
 ========================================================= */
 
-
 const API = "/api";
-
 
 
 /* =========================================================
    DOM ELEMENTS
 ========================================================= */
 
-const statsForm =
-    document.getElementById("statsForm");
+const statsForm = document.getElementById("statsForm");
+const statId = document.getElementById("statId");
+const iconInput = document.getElementById("icon");
+const targetValueInput = document.getElementById("targetValue");
+const suffixInput = document.getElementById("suffix");
+const labelInput = document.getElementById("label");
+const orderInput = document.getElementById("order");
+const isActiveInput = document.getElementById("isActive");
 
-const statId =
-    document.getElementById("statId");
+const tableBody = document.getElementById("statsTableBody");
+const messageBox = document.getElementById("message");
+const formTitle = document.getElementById("formTitle");
+const saveBtn = document.getElementById("saveBtn");
+const cancelBtn = document.getElementById("cancelBtn");
 
-const iconInput =
-    document.getElementById("icon");
 
-const targetValueInput =
-    document.getElementById("targetValue");
+/* =========================================================
+   CHECK REQUIRED ELEMENTS
+========================================================= */
 
-const suffixInput =
-    document.getElementById("suffix");
+if (
+    !statsForm ||
+    !statId ||
+    !iconInput ||
+    !targetValueInput ||
+    !suffixInput ||
+    !labelInput ||
+    !orderInput ||
+    !isActiveInput ||
+    !tableBody ||
+    !messageBox ||
+    !formTitle ||
+    !saveBtn ||
+    !cancelBtn
+) {
+    console.error(
+        "Statistics Admin: One or more required HTML elements are missing."
+    );
+}
 
-const labelInput =
-    document.getElementById("label");
 
-const orderInput =
-    document.getElementById("order");
+/* =========================================================
+   DEFAULT ICONS
+========================================================= */
 
-const isActiveInput =
-    document.getElementById("isActive");
+const STAT_ICON_MAP = {
+    "Years Experience": "fa-solid fa-calendar-days",
+    "Expert Chefs": "fa-solid fa-user-tie",
+    "Menu Items": "fa-solid fa-utensils",
+    "Happy Customers": "fa-solid fa-users"
+};
 
-const tableBody =
-    document.getElementById("statsTableBody");
 
-const messageBox =
-    document.getElementById("message");
+/* =========================================================
+   AUTO SELECT ICON WHEN LABEL CHANGES
+========================================================= */
 
-const formTitle =
-    document.getElementById("formTitle");
+if (labelInput && iconInput) {
 
-const saveBtn =
-    document.getElementById("saveBtn");
+    labelInput.addEventListener("input", () => {
 
-const cancelBtn =
-    document.getElementById("cancelBtn");
+        const selectedLabel =
+            labelInput.value.trim();
 
+        const matchedLabel =
+            Object.keys(STAT_ICON_MAP).find(
+                label =>
+                    label.toLowerCase() ===
+                    selectedLabel.toLowerCase()
+            );
+
+        if (matchedLabel) {
+
+            iconInput.value =
+                STAT_ICON_MAP[matchedLabel];
+
+        }
+
+    });
+
+}
 
 
 /* =========================================================
@@ -68,15 +108,16 @@ function getAuthHeaders() {
     const token = getToken();
 
     return {
-
         "Content-Type": "application/json",
-
         "Authorization": `Bearer ${token}`
-
     };
 
 }
 
+
+/* =========================================================
+   CHECK LOGIN
+========================================================= */
 
 function checkLogin() {
 
@@ -96,6 +137,20 @@ function checkLogin() {
 }
 
 
+/* =========================================================
+   HANDLE UNAUTHORIZED
+========================================================= */
+
+function handleUnauthorized() {
+
+    localStorage.removeItem("token");
+    localStorage.removeItem("admin");
+
+    window.location.href =
+        "/login.html";
+
+}
+
 
 /* =========================================================
    LOGOUT
@@ -104,14 +159,12 @@ function checkLogin() {
 function logout() {
 
     localStorage.removeItem("token");
-
     localStorage.removeItem("admin");
 
     window.location.href =
         "/login.html";
 
 }
-
 
 
 /* =========================================================
@@ -122,6 +175,10 @@ function showMessage(
     message,
     type = "success"
 ) {
+
+    if (!messageBox) {
+        return;
+    }
 
     messageBox.textContent =
         message;
@@ -143,7 +200,6 @@ function showMessage(
 }
 
 
-
 /* =========================================================
    ESCAPE HTML
 ========================================================= */
@@ -160,10 +216,55 @@ function escapeHtml(value) {
 }
 
 
+/* =========================================================
+   GET ALL STATISTICS
+========================================================= */
+
+async function getStats() {
+
+    const response =
+        await fetch(
+            `${API}/stats/admin`,
+            {
+                method: "GET",
+                headers:
+                    getAuthHeaders()
+            }
+        );
+
+
+    const data =
+        await response.json();
+
+
+    if (response.status === 401) {
+
+        handleUnauthorized();
+
+        return [];
+
+    }
+
+
+    if (!response.ok) {
+
+        throw new Error(
+            data.message ||
+            "Failed to load statistics."
+        );
+
+    }
+
+
+    return Array.isArray(data)
+        ? data
+        : data.data || [];
+
+}
+
 
 /* =========================================================
    LOAD ALL STATS
-    GET /api/stats/admin
 ========================================================= */
 
 async function loadStats() {
@@ -191,61 +292,10 @@ async function loadStats() {
 
     try {
 
-        const response =
-            await fetch(
-                `${API}/stats/admin`,
-                {
-                    method: "GET",
-                    headers:
-                        getAuthHeaders()
-                }
-            );
-
-
-        const data =
-            await response.json();
-
-
-        /* TOKEN EXPIRED */
-
-        if (
-            response.status === 401
-        ) {
-
-            localStorage.removeItem(
-                "token"
-            );
-
-            localStorage.removeItem(
-                "admin"
-            );
-
-            window.location.href =
-                "/login.html";
-
-            return;
-
-        }
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                data.message ||
-                "Failed to load statistics."
-            );
-
-        }
-
-
         const stats =
-            Array.isArray(data)
-                ? data
-                : data.data || [];
-
+            await getStats();
 
         renderStats(stats);
-
 
     } catch (error) {
 
@@ -272,14 +322,14 @@ async function loadStats() {
 
 
         showMessage(
-            error.message,
+            error.message ||
+            "Failed to load statistics.",
             "error"
         );
 
     }
 
 }
-
 
 
 /* =========================================================
@@ -320,7 +370,9 @@ function renderStats(stats) {
 
 
         const active =
-            stat.isActive === true;
+            stat.isActive === true ||
+            stat.isActive === 1 ||
+            stat.isActive === "true";
 
 
         tr.innerHTML = `
@@ -345,9 +397,13 @@ function renderStats(stats) {
 
                     <div class="stat-preview-icon">
 
-                        <i class="${escapeHtml(stat.icon)}"></i>
+                        <i
+                            class="${escapeHtml(stat.icon)}"
+                            aria-hidden="true"
+                        ></i>
 
                     </div>
+
 
                     <strong>
 
@@ -407,20 +463,34 @@ function renderStats(stats) {
                 <div class="action-buttons">
 
                     <button
+                        type="button"
                         class="btn"
-                        data-edit="${stat.id}"
+                        data-edit="${escapeHtml(stat.id)}"
                     >
-                        <i class="fa-solid fa-pen"></i>
+
+                        <i
+                            class="fa-solid fa-pen"
+                            aria-hidden="true"
+                        ></i>
+
                         Edit
+
                     </button>
 
 
                     <button
+                        type="button"
                         class="btn secondary"
-                        data-delete="${stat.id}"
+                        data-delete="${escapeHtml(stat.id)}"
                     >
-                        <i class="fa-solid fa-trash"></i>
+
+                        <i
+                            class="fa-solid fa-trash"
+                            aria-hidden="true"
+                        ></i>
+
                         Delete
+
                     </button>
 
                 </div>
@@ -435,10 +505,11 @@ function renderStats(stats) {
     });
 
 
+    /* =====================================================
+       EDIT BUTTONS
+    ===================================================== */
 
-    /* EDIT BUTTONS */
-
-    document
+    tableBody
         .querySelectorAll("[data-edit]")
         .forEach(button => {
 
@@ -456,10 +527,11 @@ function renderStats(stats) {
         });
 
 
+    /* =====================================================
+       DELETE BUTTONS
+    ===================================================== */
 
-    /* DELETE BUTTONS */
-
-    document
+    tableBody
         .querySelectorAll("[data-delete]")
         .forEach(button => {
 
@@ -479,172 +551,339 @@ function renderStats(stats) {
 }
 
 
-
 /* =========================================================
-   CREATE / UPDATE
+   CREATE / UPDATE STATISTIC
 ========================================================= */
 
-statsForm.addEventListener(
-    "submit",
-    async function (event) {
+if (statsForm) {
 
-        event.preventDefault();
+    statsForm.addEventListener(
+        "submit",
+        async function (event) {
 
-
-        if (!checkLogin()) {
-            return;
-        }
+            event.preventDefault();
 
 
-        const id =
-            statId.value.trim();
+            if (!checkLogin()) {
+                return;
+            }
 
 
-        const payload = {
+            const id =
+                statId.value.trim();
 
-            icon:
-                iconInput.value.trim(),
 
-            targetValue:
+            const label =
+                labelInput.value.trim();
+
+
+            const icon =
+                iconInput.value.trim();
+
+
+            const targetValue =
                 Number(
                     targetValueInput.value
-                ),
+                );
 
-            suffix:
-                suffixInput.value.trim() || "+",
 
-            label:
-                labelInput.value.trim(),
+            const suffix =
+                suffixInput.value.trim() || "+";
 
-            order:
+
+            const order =
                 Number(
                     orderInput.value
-                ) || 0,
-
-            isActive:
-                isActiveInput.value === "true"
-
-        };
+                ) || 0;
 
 
-        if (
-            !payload.icon ||
-            payload.targetValue === "" ||
-            !payload.label
-        ) {
-
-            showMessage(
-                "Please fill all required fields.",
-                "error"
-            );
-
-            return;
-
-        }
+            const isActive =
+                isActiveInput.value === "true";
 
 
-        try {
+            /* ==========================================
+               VALIDATION
+            ========================================== */
 
-            saveBtn.disabled = true;
+            if (!label) {
 
-
-            const url =
-                id
-                    ? `${API}/stats/admin/${id}`
-                    : `${API}/stats/admin`;
-
-
-            const method =
-                id
-                    ? "PUT"
-                    : "POST";
-
-
-            const response =
-                await fetch(
-                    url,
-                    {
-                        method,
-                        headers:
-                            getAuthHeaders(),
-                        body:
-                            JSON.stringify(payload)
-                    }
+                showMessage(
+                    "Please enter a statistic label.",
+                    "error"
                 );
 
-
-            const data =
-                await response.json();
-
-
-            if (
-                response.status === 401
-            ) {
-
-                localStorage.removeItem(
-                    "token"
-                );
-
-                localStorage.removeItem(
-                    "admin"
-                );
-
-                window.location.href =
-                    "/login.html";
+                labelInput.focus();
 
                 return;
 
             }
 
 
-            if (!response.ok) {
+            if (!icon) {
 
-                throw new Error(
-                    data.message ||
-                    "Failed to save statistic."
+                showMessage(
+                    "Please enter an icon.",
+                    "error"
                 );
+
+                iconInput.focus();
+
+                return;
 
             }
 
 
-            showMessage(
+            if (
+                !Number.isFinite(targetValue) ||
+                targetValue < 0
+            ) {
 
-                id
-                    ? "Statistic updated successfully."
-                    : "Statistic created successfully."
+                showMessage(
+                    "Please enter a valid target value.",
+                    "error"
+                );
 
-            );
+                targetValueInput.focus();
 
+                return;
 
-            resetForm();
-
-            loadStats();
-
-
-        } catch (error) {
-
-            console.error(
-                "Save stat error:",
-                error
-            );
+            }
 
 
-            showMessage(
-                error.message,
-                "error"
-            );
+            if (
+                !Number.isFinite(order) ||
+                order < 0
+            ) {
+
+                showMessage(
+                    "Please enter a valid order.",
+                    "error"
+                );
+
+                orderInput.focus();
+
+                return;
+
+            }
 
 
-        } finally {
+            try {
 
-            saveBtn.disabled =
-                false;
+                saveBtn.disabled = true;
+
+                saveBtn.innerHTML = `
+                    <i class="fa-solid fa-spinner fa-spin"></i>
+                    Saving...
+                `;
+
+
+                /* ==========================================
+                   GET EXISTING STATISTICS
+                ========================================== */
+
+                const existingStats =
+                    await getStats();
+
+
+                /* ==========================================
+                   CHECK DUPLICATE LABEL
+                ========================================== */
+
+                const duplicate =
+                    existingStats.find(
+                        stat => {
+
+                            const sameLabel =
+                                String(
+                                    stat.label || ""
+                                )
+                                    .trim()
+                                    .toLowerCase() ===
+                                label.toLowerCase();
+
+
+                            const differentId =
+                                String(stat.id) !==
+                                String(id);
+
+
+                            return (
+                                sameLabel &&
+                                differentId
+                            );
+
+                        }
+                    );
+
+
+                if (duplicate) {
+
+                    showMessage(
+                        `"${label}" already exists. Please use a different label.`,
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                /* ==========================================
+                   PAYLOAD
+                ========================================== */
+
+                const payload = {
+
+                    icon:
+                        icon,
+
+                    targetValue:
+                        targetValue,
+
+                    suffix:
+                        suffix,
+
+                    label:
+                        label,
+
+                    order:
+                        order,
+
+                    isActive:
+                        isActive
+
+                };
+
+
+                /* ==========================================
+                   URL + METHOD
+                ========================================== */
+
+                const url =
+                    id
+                        ? `${API}/stats/admin/${encodeURIComponent(id)}`
+                        : `${API}/stats/admin`;
+
+
+                const method =
+                    id
+                        ? "PUT"
+                        : "POST";
+
+
+                /* ==========================================
+                   SAVE
+                ========================================== */
+
+                const response =
+                    await fetch(
+                        url,
+                        {
+                            method:
+                                method,
+
+                            headers:
+                                getAuthHeaders(),
+
+                            body:
+                                JSON.stringify(
+                                    payload
+                                )
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                /* ==========================================
+                   TOKEN EXPIRED
+                ========================================== */
+
+                if (
+                    response.status === 401
+                ) {
+
+                    handleUnauthorized();
+
+                    return;
+
+                }
+
+
+                /* ==========================================
+                   ERROR
+                ========================================== */
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data.message ||
+                        "Failed to save statistic."
+                    );
+
+                }
+
+
+                /* ==========================================
+                   SUCCESS
+                ========================================== */
+
+                showMessage(
+                    id
+                        ? "Statistic updated successfully."
+                        : "Statistic created successfully."
+                );
+
+
+                resetForm();
+
+                await loadStats();
+
+
+            } catch (error) {
+
+                console.error(
+                    "Save stat error:",
+                    error
+                );
+
+
+                showMessage(
+                    error.message ||
+                    "Failed to save statistic.",
+                    "error"
+                );
+
+
+            } finally {
+
+                saveBtn.disabled =
+                    false;
+
+                if (!statId.value) {
+
+                    saveBtn.innerHTML = `
+                        <i class="fa-solid fa-floppy-disk"></i>
+                        Save Statistics
+                    `;
+
+                } else {
+
+                    saveBtn.innerHTML = `
+                        <i class="fa-solid fa-floppy-disk"></i>
+                        Update Statistics
+                    `;
+
+                }
+
+            }
 
         }
+    );
 
-    }
-);
-
+}
 
 
 /* =========================================================
@@ -660,35 +899,8 @@ async function editStat(id) {
 
     try {
 
-        const response =
-            await fetch(
-                `${API}/stats/admin`,
-                {
-                    method: "GET",
-                    headers:
-                        getAuthHeaders()
-                }
-            );
-
-
-        const data =
-            await response.json();
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                data.message ||
-                "Failed to fetch statistic."
-            );
-
-        }
-
-
         const stats =
-            Array.isArray(data)
-                ? data
-                : data.data || [];
+            await getStats();
 
 
         const stat =
@@ -708,39 +920,65 @@ async function editStat(id) {
         }
 
 
+        /* ==========================================
+           FILL FORM
+        ========================================== */
+
         statId.value =
             stat.id;
+
 
         iconInput.value =
             stat.icon || "";
 
+
         targetValueInput.value =
             stat.targetValue ?? "";
+
 
         suffixInput.value =
             stat.suffix ?? "+";
 
+
         labelInput.value =
             stat.label || "";
+
 
         orderInput.value =
             stat.order ?? 0;
 
+
         isActiveInput.value =
-            stat.isActive
+            (
+                stat.isActive === true ||
+                stat.isActive === 1 ||
+                stat.isActive === "true"
+            )
                 ? "true"
                 : "false";
 
 
+        /* ==========================================
+           CHANGE FORM UI
+        ========================================== */
+
         formTitle.textContent =
             "Edit Statistics";
 
-        saveBtn.innerHTML =
-            `
+
+        saveBtn.innerHTML = `
             <i class="fa-solid fa-floppy-disk"></i>
             Update Statistics
-            `;
+        `;
 
+
+        cancelBtn.style.display =
+            "inline-flex";
+
+
+        /* ==========================================
+           SCROLL TO FORM
+        ========================================== */
 
         window.scrollTo({
 
@@ -760,14 +998,14 @@ async function editStat(id) {
 
 
         showMessage(
-            error.message,
+            error.message ||
+            "Failed to edit statistic.",
             "error"
         );
 
     }
 
 }
-
 
 
 /* =========================================================
@@ -796,9 +1034,11 @@ async function deleteStat(id) {
 
         const response =
             await fetch(
-                `${API}/stats/admin/${id}`,
+                `${API}/stats/admin/${encodeURIComponent(id)}`,
                 {
-                    method: "DELETE",
+                    method:
+                        "DELETE",
+
                     headers:
                         getAuthHeaders()
                 }
@@ -809,25 +1049,24 @@ async function deleteStat(id) {
             await response.json();
 
 
+        /* ==========================================
+           TOKEN EXPIRED
+        ========================================== */
+
         if (
             response.status === 401
         ) {
 
-            localStorage.removeItem(
-                "token"
-            );
-
-            localStorage.removeItem(
-                "admin"
-            );
-
-            window.location.href =
-                "/login.html";
+            handleUnauthorized();
 
             return;
 
         }
 
+
+        /* ==========================================
+           ERROR
+        ========================================== */
 
         if (!response.ok) {
 
@@ -839,12 +1078,16 @@ async function deleteStat(id) {
         }
 
 
+        /* ==========================================
+           SUCCESS
+        ========================================== */
+
         showMessage(
             "Statistic deleted successfully."
         );
 
 
-        loadStats();
+        await loadStats();
 
 
     } catch (error) {
@@ -856,7 +1099,8 @@ async function deleteStat(id) {
 
 
         showMessage(
-            error.message,
+            error.message ||
+            "Failed to delete statistic.",
             "error"
         );
 
@@ -865,22 +1109,31 @@ async function deleteStat(id) {
 }
 
 
-
 /* =========================================================
    RESET FORM
 ========================================================= */
 
 function resetForm() {
 
+    if (!statsForm) {
+        return;
+    }
+
+
     statsForm.reset();
 
-    statId.value = "";
+
+    statId.value =
+        "";
+
 
     suffixInput.value =
         "+";
 
+
     orderInput.value =
         "0";
+
 
     isActiveInput.value =
         "true";
@@ -890,25 +1143,42 @@ function resetForm() {
         "Add Statistics";
 
 
-    saveBtn.innerHTML =
-        `
+    saveBtn.innerHTML = `
         <i class="fa-solid fa-floppy-disk"></i>
         Save Statistics
-        `;
+    `;
+
+
+    cancelBtn.style.display =
+        "none";
 
 }
-
 
 
 /* =========================================================
    CANCEL EDIT
 ========================================================= */
 
-cancelBtn.addEventListener(
-    "click",
-    resetForm
-);
+if (cancelBtn) {
 
+    cancelBtn.addEventListener(
+        "click",
+        function () {
+
+            resetForm();
+
+            window.scrollTo({
+
+                top: 0,
+
+                behavior: "smooth"
+
+            });
+
+        }
+    );
+
+}
 
 
 /* =========================================================
