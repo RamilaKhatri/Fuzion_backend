@@ -580,7 +580,8 @@ p {
 .field select,
 .field textarea {
     width: 100%;
-
+    
+    height: 40px;
     padding: 13px 15px;
 
     border: 1px solid #dcd0c5;

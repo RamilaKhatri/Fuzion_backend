@@ -12,25 +12,38 @@
 
     <title>Fuzion Café - Statistics</title>
 
-    <!-- Font Awesome -->
+
+    <!-- ==========================================
+         FONT AWESOME
+    =========================================== -->
+
     <link
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
     >
 
-    <!-- MASTER ADMIN CSS -->
-    <link rel="stylesheet" href="admin.css">
+
+    <!-- ==========================================
+         ADMIN CSS
+    =========================================== -->
+
+    <link
+        rel="stylesheet"
+        href="admin.css"
+    >
 
 </head>
 
 
 <body>
 
+
 <div class="layout">
 
-    <!-- =====================================================
+
+    <!-- ==========================================
          SIDEBAR
-    ====================================================== -->
+    =========================================== -->
 
     <aside class="sidebar">
 
@@ -45,91 +58,159 @@
 
         <nav class="sidebar-nav">
 
+
+            <!-- Dashboard -->
+
             <a href="/dashboard.html">
+
                 <i class="fa-solid fa-chart-line"></i>
+
                 <span>Dashboard</span>
+
             </a>
 
+
+            <!-- Projects -->
 
             <a href="/projects.html">
+
                 <i class="fa-solid fa-folder-open"></i>
+
                 <span>Projects</span>
+
             </a>
 
+
+            <!-- Menu -->
 
             <a href="/menu.html">
+
                 <i class="fa-solid fa-utensils"></i>
+
                 <span>Menu</span>
+
             </a>
 
+
+            <!-- Users -->
 
             <a href="/users.html">
+
                 <i class="fa-solid fa-users"></i>
+
                 <span>Users</span>
+
             </a>
 
+
+            <!-- Bookings -->
 
             <a href="/bookings.html">
+
                 <i class="fa-solid fa-calendar-check"></i>
+
                 <span>Bookings</span>
+
             </a>
 
+
+            <!-- Enquiries -->
 
             <a href="/enquiries.html">
+
                 <i class="fa-solid fa-envelope"></i>
+
                 <span>Enquiries</span>
+
             </a>
 
+
+            <!-- Reviews -->
 
             <a href="/reviews.html">
+
                 <i class="fa-solid fa-star"></i>
+
                 <span>Reviews</span>
+
             </a>
 
+
+            <!-- Newsletter -->
 
             <a href="/newsletter.html">
+
                 <i class="fa-solid fa-envelope-open-text"></i>
+
                 <span>Newsletter</span>
+
             </a>
 
+
+            <!-- Orders -->
 
             <a href="/orders.html">
+
                 <i class="fa-solid fa-cart-shopping"></i>
+
                 <span>Orders</span>
+
             </a>
 
+
+            <!-- Gallery -->
 
             <a href="/gallery.html">
+
                 <i class="fa-solid fa-images"></i>
+
                 <span>Gallery</span>
+
             </a>
 
 
-            <!-- ACTIVE STATS -->
+            <!-- Statistics -->
+
             <a
                 href="/stats.html"
                 class="active"
             >
+
                 <i class="fa-solid fa-chart-simple"></i>
+
                 <span>Statistics</span>
+
             </a>
 
+
+            <!-- Team -->
 
             <a href="/team.html">
+
                 <i class="fa-solid fa-user-group"></i>
+
                 <span>Team</span>
+
             </a>
 
+
+            <!-- Profile -->
 
             <a href="/profile.html">
+
                 <i class="fa-solid fa-user-gear"></i>
+
                 <span>Profile</span>
+
             </a>
+
 
         </nav>
 
 
-        <!-- SIDEBAR BOTTOM -->
+        <!-- ==========================================
+             SIDEBAR BOTTOM
+        =========================================== -->
 
         <div class="sidebar-bottom">
 
@@ -151,13 +232,16 @@
 
 
 
-    <!-- =====================================================
+    <!-- ==========================================
          MAIN CONTENT
-    ====================================================== -->
+    =========================================== -->
 
     <main class="main">
 
-        <!-- TOPBAR -->
+
+        <!-- ==========================================
+             TOPBAR
+        =========================================== -->
 
         <div class="topbar">
 
@@ -178,9 +262,9 @@
 
 
 
-        <!-- =================================================
+        <!-- ==========================================
              MESSAGE
-        ================================================== -->
+        =========================================== -->
 
         <div
             id="message"
@@ -190,11 +274,12 @@
 
 
 
-        <!-- =================================================
-             ADD / EDIT FORM
-        ================================================== -->
+        <!-- ==========================================
+             ADD / EDIT STATISTICS
+        =========================================== -->
 
         <section class="admin-card">
+
 
             <div class="admin-card-header">
 
@@ -213,7 +298,15 @@
             </div>
 
 
+
+            <!-- ======================================
+                 FORM
+            ======================================= -->
+
             <form id="statsForm">
+
+
+                <!-- Hidden ID -->
 
                 <input
                     type="hidden"
@@ -221,15 +314,18 @@
                 >
 
 
+
                 <div class="form-grid">
 
 
-                    <!-- ICON -->
+                    <!-- ==================================
+                         ICON
+                    =================================== -->
 
                     <div class="form-group">
 
                         <label for="icon">
-                            Icon
+                            Icon *
                         </label>
 
                         <input
@@ -248,12 +344,14 @@
 
 
 
-                    <!-- TARGET -->
+                    <!-- ==================================
+                         TARGET VALUE
+                    =================================== -->
 
                     <div class="form-group">
 
                         <label for="targetValue">
-                            Target Value
+                            Target Value *
                         </label>
 
                         <input
@@ -268,7 +366,9 @@
 
 
 
-                    <!-- SUFFIX -->
+                    <!-- ==================================
+                         SUFFIX
+                    =================================== -->
 
                     <div class="form-group">
 
@@ -287,61 +387,73 @@
 
 
 
-                   <!-- LABEL -->
-<div>
-    <label for="label">
-        Label *
-    </label>
+                    <!-- ==================================
+                         LABEL DROPDOWN
+                    =================================== -->
 
-    <select
-        id="label"
-        required
-    >
-        <option value="">
-            Select Statistic
-        </option>
+                    <div class="form-group">
 
-        <option value="Years Experience">
-            Years Experience
-        </option>
+                        <label for="label">
+                            Label *
+                        </label>
 
-        <option value="Expert Chefs">
-            Expert Chefs
-        </option>
+                        <select
+                            id="label"
+                            required
+                        >
 
-        <option value="Menu Items">
-            Menu Items
-        </option>
+                            <option value="">
+                                Select Statistic
+                            </option>
 
-        <option value="Happy Customers">
-            Happy Customers
-        </option>
-    </select>
-</div>
+                            <option value="Years Experience">
+                                Years Experience
+                            </option>
+
+                            <option value="Expert Chefs">
+                                Expert Chefs
+                            </option>
+
+                            <option value="Menu Items">
+                                Menu Items
+                            </option>
+
+                            <option value="Happy Customers">
+                                Happy Customers
+                            </option>
+
+                        </select>
+
+                    </div>
 
 
 
-                    <!-- ORDER -->
+                    <!-- ==================================
+                         DISPLAY ORDER
+                    =================================== -->
 
                     <div class="form-group">
 
                         <label for="order">
-                            Display Order
+                            Display Order *
                         </label>
 
                         <input
                             type="number"
                             id="order"
-                            placeholder="1"
+                            placeholder="0"
                             value="0"
                             min="0"
+                            required
                         >
 
                     </div>
 
 
 
-                    <!-- ACTIVE -->
+                    <!-- ==================================
+                         STATUS
+                    =================================== -->
 
                     <div class="form-group">
 
@@ -363,22 +475,30 @@
 
                     </div>
 
+
                 </div>
 
 
 
-                <!-- BUTTONS -->
+                <!-- ==================================
+                     BUTTONS
+                =================================== -->
 
                 <div class="form-actions">
+
 
                     <button
                         type="submit"
                         class="btn"
                         id="saveBtn"
                     >
+
                         <i class="fa-solid fa-floppy-disk"></i>
+
                         Save Statistics
+
                     </button>
+
 
 
                     <button
@@ -386,10 +506,14 @@
                         class="btn secondary"
                         id="cancelBtn"
                     >
+
                         Cancel
+
                     </button>
 
+
                 </div>
+
 
             </form>
 
@@ -397,11 +521,12 @@
 
 
 
-        <!-- =================================================
-             STATISTICS TABLE
-        ================================================== -->
+        <!-- ==========================================
+             HOMEPAGE STATISTICS TABLE
+        =========================================== -->
 
         <section class="admin-card">
+
 
             <div class="admin-card-header">
 
@@ -418,18 +543,26 @@
 
                 </div>
 
+
                 <button
                     type="button"
                     class="btn"
                     onclick="loadStats()"
                 >
+
                     <i class="fa-solid fa-rotate"></i>
+
                     Refresh
+
                 </button>
 
             </div>
 
 
+
+            <!-- ======================================
+                 TABLE
+            ======================================= -->
 
             <div class="table-wrapper">
 
@@ -470,7 +603,9 @@
                                 colspan="9"
                                 class="empty"
                             >
+
                                 Loading statistics...
+
                             </td>
 
                         </tr>
@@ -481,18 +616,22 @@
 
             </div>
 
+
         </section>
+
 
     </main>
 
 </div>
 
 
-<!-- =====================================================
+
+<!-- ==========================================
      JAVASCRIPT
-====================================================== -->
+========================================== -->
 
 <script src="stats.js"></script>
+
 
 </body>
 
