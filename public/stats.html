@@ -125,6 +125,19 @@
             </a>
 
 
+             <!-- Statistics -->
+
+            <a
+                href="/stats.html"
+                class="active"
+            >
+
+                <i class="fa-solid fa-chart-simple"></i>
+
+                <span>Cafe Stats</span>
+
+            </a>
+
             <!-- Reviews -->
 
             <a href="/reviews.html">
@@ -169,18 +182,7 @@
             </a>
 
 
-            <!-- Statistics -->
-
-            <a
-                href="/stats.html"
-                class="active"
-            >
-
-                <i class="fa-solid fa-chart-simple"></i>
-
-                <span>Statistics</span>
-
-            </a>
+           
 
 
             <!-- Team -->
@@ -319,28 +321,73 @@
 
 
                     <!-- ==================================
-                         ICON
-                    =================================== -->
+     ICON DROPDOWN
+=================================== -->
 
-                    <div class="form-group">
+<div class="form-group">
 
-                        <label for="icon">
-                            Icon *
-                        </label>
+    <label for="icon">
+        Icon *
+    </label>
 
-                        <input
-                            type="text"
-                            id="icon"
-                            placeholder="fa-solid fa-users"
-                            required
-                        >
+    <select id="icon" required>
 
-                        <small>
-                            Example:
-                            fa-solid fa-calendar-days
-                        </small>
+        <option value="">
+            Select Icon
+        </option>
 
-                    </div>
+        <!-- Years Experience -->
+        <option value="fa-solid fa-calendar-days">
+            📅 Calendar — Years Experience
+        </option>
+
+        <!-- Expert Chefs -->
+        <option value="fa-solid fa-user-chef">
+            👨‍🍳 Chef — Expert Chefs
+        </option>
+
+        <!-- Menu Items -->
+        <option value="fa-solid fa-utensils">
+            🍴 Utensils — Menu Items
+        </option>
+
+        <!-- Happy Customers -->
+        <option value="fa-solid fa-users">
+            👥 Users — Happy Customers
+        </option>
+
+        <!-- Other useful icons -->
+        <option value="fa-solid fa-mug-hot">
+            ☕ Coffee
+        </option>
+
+        <option value="fa-solid fa-star">
+            ⭐ Star
+        </option>
+
+        <option value="fa-solid fa-heart">
+            ❤️ Heart
+        </option>
+
+        <option value="fa-solid fa-clock">
+            🕐 Clock
+        </option>
+
+        <option value="fa-solid fa-award">
+            🏆 Award
+        </option>
+
+        <option value="fa-solid fa-chart-line">
+            📈 Chart
+        </option>
+
+    </select>
+
+    <small>
+        Select an icon for this statistic.
+    </small>
+
+</div>
 
 
 

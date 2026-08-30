@@ -555,14 +555,14 @@ p {
    15. FORM
    ========================================================= */
 
-.form-grid {
+/* .form-grid {
     display: grid;
 
     grid-template-columns:
         repeat(2, minmax(0, 1fr));
 
     gap: 20px;
-}
+} */
 
 .field label {
     display: block;
@@ -1015,6 +1015,50 @@ p {
         rgba(230, 167, 44, 0.10);
 }
 
+/* =========================================================
+   STATISTICS DROPDOWNS
+   Label + Icon
+   Same size as other form fields
+   ========================================================= */
+
+#label,
+#icon {
+    width: 100%;
+    height: 46px;
+    min-height: 46px;
+    padding: 10px 13px;
+
+    border: 1px solid #dfd3c8;
+    border-radius: 9px;
+
+    background: #ffffff;
+    color: #222222;
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+
+    box-sizing: border-box;
+    outline: none;
+    cursor: pointer;
+
+    transition:
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+#label:hover,
+#icon:hover {
+    border-color: #c48718;
+}
+
+#label:focus,
+#icon:focus {
+    border-color: #C9A14A;
+
+    box-shadow:
+        0 0 0 3px rgba(201, 161, 74, 0.12);
+}
+
 
 /* =========================================================
    24. DASHBOARD QUICK MANAGEMENT
@@ -1304,7 +1348,7 @@ p {
 .menu-card-top {
     width: 100%;
 
-    height: 155px;
+    height: 200px;
 
     background: linear-gradient(
         135deg,
@@ -1325,7 +1369,7 @@ p {
 .menu-card-image {
     width: 100%;
 
-    height: 200px;
+    height: 100%;
 
     display: block;
 
@@ -3118,7 +3162,7 @@ footer {
 
 /* MESSAGE */
 
-.message {
+/* .message {
     padding: 13px 17px;
     border-radius: 9px;
     margin-bottom: 20px;
@@ -3135,7 +3179,7 @@ footer {
     background: #fdecec;
     color: #9b2525;
     border: 1px solid #efbcbc;
-}
+} */
 
 
 /* STAT PREVIEW */
@@ -3171,7 +3215,7 @@ footer {
 
 /* STATUS */
 
-.status {
+/* .status {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -3182,7 +3226,7 @@ footer {
 
     font-size: 12px;
     font-weight: 700;
-}
+} */
 
 .status.active {
     background: #e8f6ec;
