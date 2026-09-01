@@ -3074,6 +3074,189 @@ footer {
 
 
 /* =========================================================
+   40. GLOBAL RESPONSIVE SAFETY - PREVENT HORIZONTAL OVERFLOW
+   Applies to all admin pages. Must stay at end to override.
+========================================================= */
+
+html {
+    overflow-x: hidden;
+    max-width: 100%;
+}
+
+body {
+    overflow-x: hidden;
+    max-width: 100%;
+}
+
+.layout {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+.main,
+.main-content {
+    max-width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Ensure all containers respect viewport width */
+.panel,
+.admin-card,
+.dashboard-panel,
+.form-box,
+.menu-form,
+.form-grid,
+#manageForm,
+.admin-reviews-grid {
+    max-width: 100%;
+    box-sizing: border-box;
+    min-width: 0;
+}
+
+/* Word wrap for long text */
+.table td,
+.table th,
+.panel p,
+.admin-card p,
+.menu-card p,
+.recent-item-main span,
+.recent-item-main strong,
+.admin-review-comment p {
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+/* =========================================================
+   TABLE RESPONSIVE - UNIVERSAL
+   Never allow body to scroll, only table container
+========================================================= */
+
+.table-wrap,
+.table-wrapper {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    border-radius: 10px;
+}
+
+.table-wrap::-webkit-scrollbar,
+.table-wrapper::-webkit-scrollbar {
+    height: 6px;
+}
+
+.table-wrap::-webkit-scrollbar-thumb,
+.table-wrapper::-webkit-scrollbar-thumb {
+    background: #d8c7b8;
+    border-radius: 10px;
+}
+
+.table {
+    min-width: 640px;
+    width: 100%;
+    max-width: none;
+}
+
+/* Allow very small tables to shrink */
+.table-wrap .table,
+.table-wrapper .table {
+    min-width: 600px;
+}
+
+/* Prevent action buttons from wrapping badly inside table */
+.table td .actions,
+.table td .action-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    min-width: max-content;
+}
+
+.table td .btn {
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+/* =========================================================
+   MOBILE TOPBAR + SIDEBAR TOGGLE (appears <= 768px)
+========================================================= */
+
+.mobile-topbar {
+    display: none;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    background: #0b0f19;
+    color: #fff;
+    padding: 12px 16px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+}
+
+.mobile-topbar-brand {
+    font-weight: 800;
+    letter-spacing: 1.2px;
+    font-size: 16px;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+}
+
+.mobile-topbar-brand small {
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: #d7c3ae;
+    font-weight: 600;
+}
+
+.sidebar-toggle {
+    width: 42px;
+    height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 9px;
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+    font-size: 18px;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.2s ease;
+}
+
+.sidebar-toggle:hover {
+    background: #d89a1f;
+}
+
+.sidebar-toggle:active {
+    transform: scale(0.97);
+}
+
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 998;
+    backdrop-filter: blur(2px);
+}
+
+.sidebar-overlay.active {
+    display: block;
+}
+
+/* =========================================================
    STATISTICS ADMIN PAGE
 ========================================================= */
 
@@ -3301,4 +3484,601 @@ table code {
         flex-direction: column;
     }
 
+}
+
+/* =========================================================
+   41. COMPREHENSIVE RESPONSIVE SYSTEM - ENHANCED
+   Overrides + additions. Keep desktop unchanged, fix tablet/mobile.
+========================================================= */
+
+/* ---------- 1200px: Large tablet ---------- */
+@media (max-width: 1200px) {
+    .main {
+        padding: 28px 24px;
+    }
+    .panel,
+    .admin-card,
+    .dashboard-panel {
+        padding: 22px;
+    }
+}
+
+/* ---------- 992px: Tablet landscape ---------- */
+@media (max-width: 992px) {
+    .sidebar {
+        width: 220px;
+    }
+    .main {
+        margin-left: 220px;
+        width: calc(100% - 220px);
+        padding: 24px 20px;
+    }
+    .topbar {
+        gap: 14px;
+    }
+    .topbar h1 {
+        font-size: 28px;
+    }
+    .dashboard-heading h1 {
+        font-size: 28px;
+    }
+    /* Forms already handled at 900px, ensure inputs don't overflow */
+    .field input,
+    .field select,
+    .field textarea,
+    .form-group input,
+    .form-group select,
+    #manageForm input,
+    #manageForm select,
+    #manageForm textarea,
+    #teamForm input,
+    #teamForm select {
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+    /* Search bars / filters wrap */
+    .panel .topbar,
+    .admin-card-header {
+        flex-wrap: wrap;
+    }
+    .table {
+        font-size: 16px;
+    }
+    .table th,
+    .table td {
+        padding: 12px 10px;
+        font-size: 15px;
+    }
+}
+
+/* ---------- 768px: Tablet portrait / Mobile nav activation ---------- */
+@media (max-width: 768px) {
+    /* Show mobile topbar */
+    .mobile-topbar {
+        display: flex;
+    }
+
+    /* Hide desktop brand? Keep but sidebar becomes drawer */
+    .layout {
+        display: block;
+    }
+
+    /* Sidebar becomes off-canvas drawer */
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 280px;
+        max-width: 86vw;
+        height: 100vh;
+        height: 100dvh;
+        transform: translateX(-105%);
+        transition: transform 0.30s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 1001;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        box-shadow: 4px 0 24px rgba(0,0,0,0.25);
+        padding: 20px 14px;
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .sidebar .brand,
+    .sidebar .brand1 {
+        font-size: 22px;
+        padding: 6px 5px 16px;
+    }
+
+    .main,
+    .main-content {
+        margin-left: 0 !important;
+        width: 100% !important;
+        max-width: 100%;
+        padding: 18px 16px;
+        overflow-x: hidden;
+    }
+
+    /* Topbars stack vertically */
+    .topbar,
+    .dashboard-topbar,
+    .panel .topbar,
+    .admin-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+    }
+
+    .topbar h1,
+    .dashboard-heading h1 {
+        font-size: 26px;
+        line-height: 1.2;
+    }
+
+    .topbar h2,
+    .panel h2 {
+        font-size: 20px;
+    }
+
+    /* Dashboard - cards stack handled already at 700px, ensure here too */
+    .dashboard-stat-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+    }
+
+    .quick-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .recent-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Forms single column */
+    .form-grid,
+    #manageForm,
+    #teamForm,
+    #statsForm .form-grid {
+        grid-template-columns: 1fr !important;
+        gap: 16px;
+    }
+
+    .field.full,
+    .form-group.full,
+    .full,
+    #manageForm .full,
+    #imagePreviewContainer {
+        grid-column: 1 / -1 !important;
+    }
+
+    .actions,
+    .form-actions {
+        flex-wrap: wrap;
+    }
+
+    .actions .btn,
+    .form-actions .btn {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    /* Menu/Gallery grids */
+    #menuItems,
+    .gallery-grid,
+    #projects,
+    .admin-reviews-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 14px;
+    }
+
+    /* Reviews summary */
+    .reviews-summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    /* Table wrappers ensure scroll */
+    .table-wrap,
+    .table-wrapper {
+        margin-left: -16px;
+        margin-right: -16px;
+        max-width: calc(100% + 32px);
+        width: calc(100% + 32px);
+        padding-left: 0;
+        padding-right: 0;
+        border-radius: 0;
+    }
+
+    .table-wrap .table,
+    .table-wrapper table {
+        min-width: 680px;
+    }
+
+    /* Panels adjust */
+    .panel,
+    .admin-card,
+    .dashboard-panel,
+    .form-box {
+        padding: 18px 16px;
+        border-radius: 14px;
+    }
+
+    /* Ensure buttons wrap safely */
+    .panel .topbar .btn,
+    .admin-card-header .btn {
+        width: auto;
+        max-width: 100%;
+    }
+
+    /* Modals / dialogs fit viewport */
+    /* Any fixed modals should be constrained */
+    [role="dialog"],
+    .modal,
+    dialog {
+        max-width: 94vw !important;
+        max-height: 90vh !important;
+        overflow-y: auto;
+    }
+}
+
+/* ---------- 576px: Large mobile ---------- */
+@media (max-width: 576px) {
+    .main,
+    .main-content {
+        padding: 14px 12px;
+    }
+
+    .table-wrap,
+    .table-wrapper {
+        margin-left: -12px;
+        margin-right: -12px;
+        max-width: calc(100% + 24px);
+        width: calc(100% + 24px);
+    }
+
+    .dashboard-stat-grid {
+        grid-template-columns: 1fr;
+    }
+
+    #menuItems,
+    .gallery-grid,
+    #projects,
+    .admin-reviews-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .reviews-summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .menu-card-top {
+        height: 170px;
+    }
+
+    .gallery-card img {
+        height: 170px;
+    }
+
+    #imagePreview {
+        width: 100% !important;
+        max-width: 220px !important;
+        height: auto !important;
+        aspect-ratio: 16 / 10;
+    }
+
+    /* Form buttons full width on mobile */
+    .actions,
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .actions .btn,
+    .form-actions .btn,
+    .panel .topbar .btn,
+    .admin-card-header .btn {
+        width: 100%;
+    }
+
+    /* Action buttons inside tables stack better */
+    .table td .actions,
+    .table td .action-buttons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .table td .actions .btn,
+    .table td .action-buttons .btn,
+    #tbody .btn {
+        width: 100%;
+        min-height: 38px;
+        justify-content: center;
+    }
+
+    /* Admin review card */
+    .admin-review-card-top {
+        flex-direction: column;
+    }
+
+    .admin-review-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    /* Ensure topbar logout buttons don't overflow */
+    .topbar .logout,
+    .dashboard-logout,
+    .sidebar-bottom .logout {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .dashboard-user-area {
+        flex-wrap: wrap;
+        width: 100%;
+    }
+
+    /* Prevent inline style View all links from breaking */
+    .panel-heading a,
+    .topbar a {
+        white-space: nowrap;
+        font-size: 16px !important;
+    }
+
+    /* Suffix etc */
+    .admin-card-header h2 {
+        font-size: 22px;
+    }
+}
+
+/* ---------- 430px: Standard mobile ---------- */
+@media (max-width: 430px) {
+    .mobile-topbar {
+        padding: 10px 12px;
+    }
+
+    .main,
+    .main-content {
+        padding: 12px 10px;
+    }
+
+    .table-wrap,
+    .table-wrapper {
+        margin-left: -10px;
+        margin-right: -10px;
+        max-width: calc(100% + 20px);
+        width: calc(100% + 20px);
+    }
+
+    .panel,
+    .admin-card,
+    .dashboard-panel {
+        padding: 16px 12px;
+    }
+
+    .topbar h1,
+    .dashboard-heading h1 {
+        font-size: 24px;
+    }
+
+    .panel h2,
+    .admin-card-header h2,
+    .panel-heading h2 {
+        font-size: 19px;
+    }
+
+    .stat-number {
+        font-size: 26px;
+    }
+
+    .btn,
+    .btn.primary,
+    .btn.secondary {
+        font-size: 15px;
+        min-height: 42px;
+        padding: 10px 14px;
+    }
+
+    /* Menu actions 3-col still on 430? Make 2-col to avoid cram */
+    .menu-actions {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .menu-actions button:last-child {
+        grid-column: 1 / -1;
+    }
+
+    /* Message boxes */
+    .message {
+        font-size: 15px;
+        padding: 11px 13px;
+        word-break: break-word;
+    }
+}
+
+/* ---------- 375px: Small mobile ---------- */
+@media (max-width: 375px) {
+    .sidebar {
+        width: 300px;
+        max-width: 90vw;
+    }
+
+    .topbar h1,
+    .dashboard-heading h1 {
+        font-size: 22px;
+    }
+
+    .dashboard-stat-card {
+        padding: 18px 16px;
+        min-height: 130px;
+    }
+
+    .stat-icon {
+        width: 42px;
+        height: 42px;
+        font-size: 18px;
+    }
+
+    .quick-action {
+        padding: 14px;
+        gap: 10px;
+    }
+
+    .quick-action-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+
+    .table th,
+    .table td {
+        padding: 10px 8px;
+        font-size: 13px;
+    }
+
+    #tbody .btn,
+    .table td .btn {
+        font-size: 13px;
+        padding: 7px 10px;
+    }
+
+    /* Gallery form labels */
+    #manageForm label,
+    .field label,
+    .form-group label {
+        font-size: 15px;
+    }
+
+    .menu-card-content {
+        padding: 14px 13px;
+    }
+
+    .menu-card h3 {
+        font-size: 18px;
+    }
+}
+
+/* ---------- 320px: Extra small ---------- */
+@media (max-width: 320px) {
+    .main,
+    .main-content {
+        padding: 10px 8px;
+    }
+
+    .sidebar {
+        max-width: 92vw;
+        padding: 16px 10px;
+    }
+
+    .mobile-topbar-brand {
+        font-size: 15px;
+    }
+
+    .topbar h1 {
+        font-size: 20px;
+    }
+
+    .panel,
+    .admin-card,
+    .dashboard-panel {
+        padding: 14px 10px;
+        border-radius: 12px;
+    }
+
+    .btn {
+        font-size: 14px;
+        min-height: 40px;
+        padding: 9px 12px;
+    }
+
+    .menu-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-review-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .form-actions .btn,
+    .actions .btn {
+        font-size: 14px;
+    }
+
+    /* Reduce dashboard topbar spacing */
+    .dashboard-topbar {
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+}
+
+/* ---------- Utility: Prevent CLS from long URLs / codes ---------- */
+td code,
+td a,
+.panel code {
+    word-break: break-all;
+    overflow-wrap: anywhere;
+}
+
+/* Table wrapper for stats.html: previously unstyled */
+.table-wrapper {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.table-wrapper table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+}
+
+.table-wrapper th,
+.table-wrapper td {
+    padding: 12px 14px;
+    border-bottom: 1px solid #eee5df;
+    text-align: left;
+    font-size: 15px;
+    white-space: nowrap;
+}
+
+.table-wrapper th {
+    background: #faf5ef;
+    color: #4b3020;
+    font-weight: 700;
+}
+
+.table-wrapper td {
+    color: #2d211b;
+}
+
+.table-wrapper tr:hover {
+    background: #fffaf3;
+}
+
+/* Gallery filter / search bars wrap */
+.panel .topbar input,
+.panel .topbar select,
+.admin-card-header input,
+.admin-card-header select {
+    max-width: 100%;
+    min-width: 0;
+}
+
+/* Ensure file inputs fit */
+input[type="file"] {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Modal / confirm dialogs responsive (if any custom modal) */
+@media (max-width: 576px) {
+    dialog,
+    .modal-content {
+        margin: 12px;
+        width: calc(100% - 24px) !important;
+        max-width: calc(100% - 24px) !important;
+    }
 }

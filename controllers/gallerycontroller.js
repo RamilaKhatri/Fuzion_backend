@@ -102,6 +102,13 @@ const createGallery =
                     ).trim()
                     : null;
 
+            // eventType - specific type for events (gathering, birthday, party, etc)
+            // Kept separate from category so filter stays "events"
+            const eventType =
+                req.body.eventType !== undefined && req.body.eventType !== null
+                    ? String(req.body.eventType).trim().toLowerCase() || null
+                    : null;
+
 
             const status =
                 req.body.status
@@ -227,6 +234,8 @@ const createGallery =
 
                     description:
                         description || null,
+
+                    eventType: eventType || null,
 
                     status,
 
@@ -582,6 +591,13 @@ const updateGallery =
                     )
                     : item.showOnHome;
 
+            const eventType =
+                req.body.eventType !== undefined
+                    ? (req.body.eventType === null || String(req.body.eventType).trim() === ""
+                        ? null
+                        : String(req.body.eventType).trim().toLowerCase())
+                    : item.eventType;
+
 
             /* ==========================================
                VALIDATION
@@ -688,6 +704,8 @@ const updateGallery =
 
                 description:
                     description || null,
+
+                eventType: eventType || null,
 
                 status,
 

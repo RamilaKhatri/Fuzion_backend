@@ -57,6 +57,7 @@ const images = [
     title: "Event Gathering",
     imageUrl: "assets/images/gallery/img9.png",
     category: "events",
+    eventType: "gathering",
     description: "Special event gathering at Fuzion Cafe",
   },
 
@@ -150,6 +151,7 @@ const images = [
     title: "Corporate Gathering",
     imageUrl: "assets/images/gallery/event1.jpg",
     category: "events",
+    eventType: "gathering",
     description:
       "Corporate breakfast meeting with premium coffee and catering services",
   },
@@ -157,6 +159,7 @@ const images = [
     title: "Birthday Celebration",
     imageUrl: "assets/images/gallery/event2.jpg",
     category: "events",
+    eventType: "birthday",
     description:
       "Birthday celebration with custom menu and beautiful ambiance",
   },
@@ -164,6 +167,7 @@ const images = [
     title: "Wedding Reception",
     imageUrl: "assets/images/gallery/event3.jpg",
     category: "events",
+    eventType: "wedding",
     description:
       "Elegant wedding reception with premium cuisine",
   },
@@ -171,6 +175,7 @@ const images = [
     title: "Private Dinner Party",
     imageUrl: "assets/images/gallery/event4.jpg",
     category: "events",
+    eventType: "party",
     description:
       "Private dinner with personalized menu and exclusive arrangement",
   },

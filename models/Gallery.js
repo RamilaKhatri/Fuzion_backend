@@ -31,6 +31,12 @@ const Gallery = sequelize.define(
             allowNull: true
         },
 
+        eventType: {
+            type: DataTypes.STRING,
+            allowNull: true,
+            defaultValue: null
+        },
+
         status: {
             type: DataTypes.STRING,
             allowNull: false,
