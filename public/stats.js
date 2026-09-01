@@ -56,7 +56,7 @@ if (
 
 const STAT_ICON_MAP = {
     "Years Experience": "fa-solid fa-calendar-days",
-    "Expert Chefs": "fa-solid fa-user-tie",
+    "Expert Chefs": "fa-solid fa-chef-hat",
     "Menu Items": "fa-solid fa-utensils",
     "Happy Customers": "fa-solid fa-users"
 };

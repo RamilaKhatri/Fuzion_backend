@@ -15,7 +15,7 @@ async function seed() {
 
         await CafeStat.bulkCreate([
             { icon: "fa-solid fa-calendar-days", targetValue: 2,     suffix: "+", label: "Years Experience", order: 1 },
-            { icon: "fa-solid fa-kitchen-set",   targetValue: 10,    suffix: "+", label: "Expert Chefs",      order: 2 },
+            { icon: "fa-solid fa-chef-hat",      targetValue: 10,    suffix: "+", label: "Expert Chefs",      order: 2 },
             { icon: "fa-solid fa-utensils",      targetValue: 100,   suffix: "+", label: "Menu Items",        order: 3 },
             { icon: "fa-solid fa-users",         targetValue: 10000, suffix: "+", label: "Happy Customers",   order: 4 },
         ]);
