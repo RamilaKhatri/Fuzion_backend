@@ -4,6 +4,8 @@ const path = require("path");
 require("dotenv").config();
 
 const sequelize = require("./config/database");
+const cron = require("node-cron");
+const { syncGoogleReviews } = require("./services/googleReviewSync");
 
 /* =====================================================
    UPLOADTHING
@@ -60,6 +62,7 @@ require("./models/Order");
 require("./models/Gallery");
 require("./models/Newsletter");
 require("./models/Review");
+require("./models/GoogleReview");
 
 /* =====================================================
    LOAD ROUTES
@@ -97,6 +100,9 @@ const userRoutes =
 
 const galleryRoutes =
     require("./routes/galleryRoutes");
+
+const googleReviewRoutes =
+    require("./routes/googleReviewRoutes");
 
 const newsletterRoutes =
     require("./routes/newsletterRoutes");
@@ -273,6 +279,11 @@ app.use(
 );
 
 app.use(
+    "/api/google-reviews",
+    googleReviewRoutes
+);
+
+app.use(
     "/api/newsletter",
     newsletterRoutes
 );
@@ -441,6 +452,30 @@ sequelize
 
                     console.log(
                         `UploadThing endpoint: http://localhost:${PORT}/api/uploadthing`
+                    );
+
+
+                    /* =====================================================
+                       GOOGLE REVIEW SYNC
+                       -----------------------------------------------------
+                       - Runs once on server startup (in case the last
+                         sync was days ago, e.g. after a redeploy).
+                       - Runs again every day at 3 AM server time.
+
+                       This costs money per Apify run, so it deliberately
+                       does NOT run on every request - only on this
+                       schedule, or when an admin manually triggers it
+                       via POST /api/google-reviews/sync.
+                    ===================================================== */
+
+                    syncGoogleReviews();
+
+                    cron.schedule(
+                        "0 3 * * *",
+                        () => {
+                            console.log("Running scheduled Google review sync...");
+                            syncGoogleReviews();
+                        }
                     );
 
                 }
