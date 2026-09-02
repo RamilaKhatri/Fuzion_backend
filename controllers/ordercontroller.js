@@ -13,6 +13,10 @@ const createOrder = async (req, res, next) => {
       items: typeof items === "string" ? items : JSON.stringify(items),
       totalAmount: Number(totalAmount), status: "Pending"
     });
+    try {
+      const { createNotification } = require("../services/notificationService");
+      createNotification({ type: "order", title: "New Order", message: `${order.customerName} placed a new order.`, link: "/orders.html", relatedId: order.id });
+    } catch (_) {}
     res.status(201).json({ message: "Order created successfully", order });
   } catch (error) { next(error); }
 };

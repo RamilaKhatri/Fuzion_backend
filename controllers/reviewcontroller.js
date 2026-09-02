@@ -1,4 +1,5 @@
 const Review = require("../models/Review");
+const { createNotification } = require("../services/notificationService");
 
 const createReview = async (req, res, next) => {
     try {
@@ -15,6 +16,14 @@ const createReview = async (req, res, next) => {
             email: String(email).trim().toLowerCase(),
             rating,
             comment: String(comment).trim()
+        });
+
+        createNotification({
+            type: "review",
+            title: "New Review",
+            message: `${review.name} submitted a new review.`,
+            link: "/reviews.html",
+            relatedId: review.id
         });
 
         return res.status(201).json(review);

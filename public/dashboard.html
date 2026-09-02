@@ -464,6 +464,50 @@
 
 
         <!-- =================================================
+             WEBSITE VISITOR ANALYTICS
+        ================================================== -->
+        <section class="dashboard-panel" id="visitorAnalyticsSection">
+            <div class="panel-heading">
+                <h2>Website Visitor Analytics</h2>
+                <span style="font-size:14px;color:#777">Anonymous tracking</span>
+            </div>
+            <div class="visitor-analytics-grid">
+                <div class="visitor-analytics-card">
+                    <span>Today's Visitors</span>
+                    <strong id="vaTodayVisitors">0</strong>
+                    <small>Unique visitors</small>
+                </div>
+                <div class="visitor-analytics-card">
+                    <span>Today's Page Views</span>
+                    <strong id="vaTodayPageViews">0</strong>
+                    <small>All page loads</small>
+                </div>
+                <div class="visitor-analytics-card">
+                    <span>Total Visitors</span>
+                    <strong id="vaTotalVisitors">0</strong>
+                    <small>All time</small>
+                </div>
+                <div class="visitor-analytics-card">
+                    <span>Total Page Views</span>
+                    <strong id="vaTotalPageViews">0</strong>
+                    <small>All time</small>
+                </div>
+            </div>
+            <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:10px;font-size:13px;color:#555">
+                <span>Yesterday: <b id="vaYesterday">0</b></span>
+                <span>Last 7 days: <b id="vaLast7">0</b></span>
+                <span>Last 30 days: <b id="vaLast30">0</b></span>
+            </div>
+            <div class="visitor-analytics-tabs">
+                <button type="button" class="visitor-analytics-tab active" data-range="7">Last 7 Days</button>
+                <button type="button" class="visitor-analytics-tab" data-range="30">Last 30 Days</button>
+            </div>
+            <div class="visitor-chart-wrap">
+                <div class="visitor-chart-bars" id="visitorChartBars"></div>
+            </div>
+        </section>
+
+        <!-- =================================================
              QUICK MANAGEMENT
         ================================================== -->
 

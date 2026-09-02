@@ -47,6 +47,17 @@ const subscribeNewsletter = async (req, res) => {
                 email
             });
 
+        try {
+            const { createNotification } = require("../services/notificationService");
+            createNotification({
+                type: "newsletter",
+                title: "New Newsletter Subscriber",
+                message: "A new customer subscribed to the newsletter.",
+                link: "/newsletter.html",
+                relatedId: subscriber.id
+            });
+        } catch (_) {}
+
 
         return res.status(201).json({
 

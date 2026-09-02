@@ -63,6 +63,8 @@ require("./models/Gallery");
 require("./models/Newsletter");
 require("./models/Review");
 require("./models/GoogleReview");
+require("./models/Notification");
+require("./models/Visitor");
 
 /* =====================================================
    LOAD ROUTES
@@ -113,6 +115,12 @@ const statsRoutes =
 
 const reviewRoutes =
     require("./routes/reviewRoutes");
+
+const notificationRoutes =
+    require("./routes/notificationRoutes");
+
+const visitorRoutes =
+    require("./routes/visitorRoutes");
 
 /* =====================================================
    CREATE EXPRESS APP
@@ -296,6 +304,16 @@ app.use(
 app.use(
     "/api/reviews",
     reviewRoutes
+);
+
+app.use(
+    "/api/notifications",
+    notificationRoutes
+);
+
+app.use(
+    "/api/visitors",
+    visitorRoutes
 );
 
 /* =====================================================

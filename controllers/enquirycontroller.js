@@ -298,10 +298,24 @@ const createEnquiry = async (
 
 
         /* ==========================================
-           SEND EMAIL NOTIFICATION
-           If this fails, the enquiry is still saved —
-           email is a nice-to-have, not a requirement.
-        ========================================== */
+            ADMIN NOTIFICATION
+         ========================================== */
+        try {
+            const { createNotification } = require("../services/notificationService");
+            createNotification({
+                type: "enquiry",
+                title: "New Contact Message",
+                message: `You received a new contact message from ${enquiry.name}.`,
+                link: "/enquiries.html",
+                relatedId: enquiry.id
+            });
+        } catch (_) {}
+
+        /* ==========================================
+            SEND EMAIL NOTIFICATION
+            If this fails, the enquiry is still saved —
+            email is a nice-to-have, not a requirement.
+         ========================================== */
 
         sendEnquiryNotification(
             enquiry

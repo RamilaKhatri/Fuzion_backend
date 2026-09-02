@@ -15,6 +15,10 @@ const createBooking = async (req, res, next) => {
       date: date || null, time: time || null, guests: guests ? Number(guests) : null,
       service: service || null, message: message || null
     });
+    try {
+      const { createNotification } = require("../services/notificationService");
+      createNotification({ type: "booking", title: "New Booking", message: `${booking.name} submitted a new booking.`, link: "/bookings.html", relatedId: booking.id });
+    } catch (_) {}
     res.status(201).json({ message: "Booking submitted successfully", booking });
   } catch (error) { next(error); }
 };
